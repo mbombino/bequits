@@ -3,7 +3,7 @@ import React from "react";
 const ItemList = ({ items, onDeleteItem }) => {
   return (
     <div className="item-list">
-      <h2>Item List</h2>;
+      <h2>Item List</h2>
       {items.map((item, index) => (
         <div className="item" key={index}>
           <div>{item.item}</div>
