@@ -3,6 +3,8 @@ import jsPDF from "jspdf";
 import BillDetails from "./components/BillDetails";
 import ItemList from "./components/ItemList";
 import TotalAmount from "./components/TotalAmount";
+import styled from "@emotion/styled";
+import { Grid, Paper, Box, Card } from "@mui/material";
 import "./App.css";
 
 function App() {
@@ -48,13 +50,46 @@ function App() {
     pdf.save("invoice.pdf");
   };
   return (
-    <div className="App">
-      <h1>Invoice details</h1>
-      <BillDetails onAddItem={handleAddItem} />
-      <ItemList items={items} onDeleteItem={handleDeleteItem} />
-      <TotalAmount total={calculateTotalAmount()} />
-      <button onClick={handleDownloadPDF}>Download PDF</button>
-    </div>
+    <Box sx={{ flexGrow: 1 }}>
+      <Grid container spacing={0}>
+        <Grid item xs={2.6}>
+          <Paper
+            elevation={0}
+            style={{
+              backgroundColor: "black",
+              color: "white",
+              height: 800,
+            }}
+          >
+            Templates
+          </Paper>
+        </Grid>
+        <Grid item xs={5}>
+          <Paper
+            elevation={0}
+            style={{
+              //backgroundColor: "black",
+              //color: "white",
+              height: 800,
+            }}
+          >
+            Invoice details
+          </Paper>
+        </Grid>
+        <Grid item xs={4.4}>
+          <Paper
+            elevation={0}
+            style={{
+              backgroundColor: "#f1f1f1",
+              //color: "white",
+              height: 800,
+            }}
+          >
+            PDF Preview
+          </Paper>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
 
