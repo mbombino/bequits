@@ -3,9 +3,9 @@ import jsPDF from "jspdf";
 import BillDetails from "./components/BillDetails";
 import ItemList from "./components/ItemList";
 import TotalAmount from "./components/TotalAmount";
+import Templates from "./components/Templates";
 import styled from "@emotion/styled";
 import { Grid, Paper, Box, Card } from "@mui/material";
-import "./App.css";
 
 function App() {
   const [items, setItems] = React.useState([]);
@@ -52,17 +52,8 @@ function App() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={0}>
-        <Grid item xs={2.6}>
-          <Paper
-            elevation={0}
-            style={{
-              backgroundColor: "black",
-              color: "white",
-              height: 800,
-            }}
-          >
-            Templates
-          </Paper>
+        <Grid item xs={2.6} bgcolor={"black"}>
+          <Templates />
         </Grid>
         <Grid item xs={5}>
           <Paper
