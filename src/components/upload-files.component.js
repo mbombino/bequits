@@ -1,4 +1,4 @@
-import { Button, Box, Typography, Grid, Avatar, ListItem } from "@mui/material";
+import { Button, Box, Typography, Grid, Avatar } from "@mui/material";
 import {
   AddAPhotoRounded,
   ChangeCircleRounded,
@@ -21,38 +21,13 @@ export default function UploadFile() {
 
   const upload = (event) => {
     let currentFile = event.target.files[0];
-    //setUploadedFile(URL.createObjectURL(currentFile));
-    /*UploadFileService.getBase64(currentFile).then((result) => {
-      currentFile["base64"] = result;
-      setUploadedFile(currentFile);
-    });*/
-    console.log(currentFile);
+
     const data = new FileReader();
     data.addEventListener("load", () => {
       setUploadedFile(data.result);
     });
     data.readAsDataURL(currentFile);
     setLogoImageSelected(true);
-
-    /*UploadFileService.upload(currentFile)
-      .then((response) => {
-        console.log(response.data.message);
-        //if file exists, replace it
-        setLogoImageSelected(true);
-        return UploadFileService.getFile(currentFile.name);
-      })
-      .then((file) => {
-        const base64 = btoa(
-          new Uint8Array(file.data).reduce(
-            (data, byte) => data + String.fromCharCode(byte),
-            ""
-          )
-        );
-        setUploadedFile("data:;base64," + base64);
-      })
-      .catch(() => {
-        console.log("Could not upload file");
-      });*/
   };
 
   return (
