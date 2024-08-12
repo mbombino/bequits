@@ -7,11 +7,14 @@ import {
 } from "@mui/icons-material";
 import UploadFileService from "../services/upload-files.service";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 export default function UploadFile() {
   const [defaultCoverImages, setDefaultCoverImages] = useState();
   const [uploadedFile, setUploadedFile] = useState();
   const [logoImageSelected, setLogoImageSelected] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     UploadFileService.getFiles().then((files) => {

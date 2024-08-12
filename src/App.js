@@ -8,7 +8,7 @@ import { Grid, Paper, Box, Card } from "@mui/material";
 import UploadFile from "./components/upload-files.component";
 import PDFPreview from "./components/pdf-preview.component";
 import { Provider } from "react-redux";
-import { store } from "../store/store";
+import { store } from "./store/store";
 
 function App() {
   const [items, setItems] = React.useState([]);
