@@ -7,6 +7,8 @@ import { Grid, Paper, Box, Card } from "@mui/material";
 
 import UploadFile from "./components/upload-files.component";
 import PDFPreview from "./components/pdf-preview.component";
+import { Provider } from "react-redux";
+import { store } from "../store/store";
 
 function App() {
   const [items, setItems] = React.useState([]);
@@ -24,26 +26,28 @@ function App() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={0}>
-        <Grid item xs={2.6} bgcolor={"black"}>
-          <UploadFile />
+    <Provider store={store}>
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={0}>
+          <Grid item xs={2.6} bgcolor={"black"}>
+            <UploadFile />
+          </Grid>
+          <Grid item xs={5}>
+            <Paper
+              elevation={0}
+              style={{
+                height: 800,
+              }}
+            >
+              Invoice details
+            </Paper>
+          </Grid>
+          <Grid item xs={4.4} bgcolor={"#f1f1f1"}>
+            <PDFPreview />
+          </Grid>
         </Grid>
-        <Grid item xs={5}>
-          <Paper
-            elevation={0}
-            style={{
-              height: 800,
-            }}
-          >
-            Invoice details
-          </Paper>
-        </Grid>
-        <Grid item xs={4.4} bgcolor={"#f1f1f1"}>
-          <PDFPreview />
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </Provider>
   );
 }
 
