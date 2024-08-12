@@ -3,10 +3,10 @@ import React from "react";
 import BillDetails from "./components/BillDetails";
 import ItemList from "./components/ItemList";
 import TotalAmount from "./components/TotalAmount";
+import { Grid, Paper, Box, Card } from "@mui/material";
 
 import UploadFile from "./components/upload-files.component";
-
-import { Grid, Paper, Box, Card } from "@mui/material";
+import PDFPreview from "./components/pdf-preview.component";
 
 function App() {
   const [items, setItems] = React.useState([]);
@@ -39,16 +39,8 @@ function App() {
             Invoice details
           </Paper>
         </Grid>
-        <Grid item xs={4.4}>
-          <Paper
-            elevation={0}
-            style={{
-              backgroundColor: "#f1f1f1",
-              height: 800,
-            }}
-          >
-            PDF Preview
-          </Paper>
+        <Grid item xs={4.4} bgcolor={"#f1f1f1"}>
+          <PDFPreview />
         </Grid>
       </Grid>
     </Box>

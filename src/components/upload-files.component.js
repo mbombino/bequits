@@ -32,7 +32,7 @@ export default function UploadFile() {
 
   return (
     <Box mt={6} ml={6}>
-      <Typography variant="h4" color={"white"}>
+      <Typography variant="h5" color={"white"}>
         Templates
       </Typography>
       <Typography color={"white"} mt={4}>
