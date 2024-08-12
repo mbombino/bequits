@@ -1,10 +1,11 @@
 import React from "react";
-import jsPDF from "jspdf";
+
 import BillDetails from "./components/BillDetails";
 import ItemList from "./components/ItemList";
 import TotalAmount from "./components/TotalAmount";
-import Templates from "./components/Templates";
-import styled from "@emotion/styled";
+
+import UploadFile from "./components/upload-files.component";
+
 import { Grid, Paper, Box, Card } from "@mui/material";
 
 function App() {
@@ -21,46 +22,17 @@ function App() {
   const calculateTotalAmount = () => {
     return items.reduce((total, item) => total + item.quantity * item.price, 0);
   };
-  const handleDownloadPDF = () => {
-    const pdf = new jsPDF();
-    pdf.text("Invoice", 20, 20);
 
-    // Add items to PDF
-    items.forEach((item, index) => {
-      const yPos = 30 + index * 10;
-      pdf.text(
-        `Item: ${item.item}, 
-                Quantity: ${item.quantity}, 
-                Price: ${item.price}`,
-        20,
-        yPos
-      );
-    });
-
-    // Add total amount to PDF
-    const totalAmount = calculateTotalAmount();
-    pdf.text(
-      `Total Amount: 
-                $${totalAmount.toFixed(2)}`,
-      20,
-      180
-    );
-
-    // Save the PDF
-    pdf.save("invoice.pdf");
-  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={0}>
         <Grid item xs={2.6} bgcolor={"black"}>
-          <Templates />
+          <UploadFile />
         </Grid>
         <Grid item xs={5}>
           <Paper
             elevation={0}
             style={{
-              //backgroundColor: "black",
-              //color: "white",
               height: 800,
             }}
           >
@@ -72,7 +44,6 @@ function App() {
             elevation={0}
             style={{
               backgroundColor: "#f1f1f1",
-              //color: "white",
               height: 800,
             }}
           >
