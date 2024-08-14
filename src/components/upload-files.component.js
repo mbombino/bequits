@@ -6,6 +6,7 @@ import {
   FileUploadRounded,
 } from "@mui/icons-material";
 import UploadFileService from "../services/upload-files.service";
+import { setCoverImageUrl } from "../store/invoiceSlice";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -139,7 +140,13 @@ export default function UploadFile() {
           defaultCoverImages.map((file, index) => {
             return (
               <div key={index} style={{ marginTop: 2 }}>
-                <img src={file.url} style={{ width: "80%", borderRadius: 5 }} />
+                <img
+                  src={file.url}
+                  style={{ width: "80%", borderRadius: 5 }}
+                  onClick={() => {
+                    dispatch(setCoverImageUrl(file.url));
+                  }}
+                />
               </div>
             );
           })}

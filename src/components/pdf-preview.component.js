@@ -1,35 +1,55 @@
-import { Box, Typography } from "@mui/material";
-import {
-  Page,
-  Text,
-  View,
-  Document,
-  StyleSheet,
-  Image,
-} from "@react-pdf/renderer";
+import generatePDF from "react-to-pdf";
+import { Box, Typography, Button } from "@mui/material";
+
+import { useEffect, useState, useRef } from "react";
+
+import { useSelector } from "react-redux";
+import uploadFilesService from "../services/upload-files.service";
 
 export default function PDFPreview() {
-  return (
-    <Box mt={6} ml={6} bgcolor={"#f1f1f1"}>
-      <Typography variant="h5">PDF preview</Typography>
-      <Document>
-        <Page size="A4" style={styles.page}>
-          <Image style={styles.image} src="/images/quijote1.jpg" />
+  const [defaultCoverImage, setDefaultCoverImage] = useState();
+  const coverImageUrl = useSelector((state) => state.invoice.coverImageUrl);
 
-          <Text style={styles.section}>Invoice</Text>
-        </Page>
-      </Document>
+  useEffect(() => {
+    uploadFilesService.getFile("Screenshot_1720896535.png").then((blob) => {
+      const fileReaderInstance = new FileReader();
+      fileReaderInstance.readAsDataURL(blob.data);
+      fileReaderInstance.onload = () => {
+        const base64Data = fileReaderInstance.result;
+        console.log(blob.headers["content-type"]);
+        setDefaultCoverImage(`data:image/png;base64,${base64Data}`);
+      };
+    });
+  }, []);
+
+  const [inputValue, setInputValue] = useState({
+    note: "",
+    date: "",
+    issued: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputValue({
+      [name]: value,
+    });
+  };
+
+  const targetRef = useRef();
+
+  return (
+    <Box>
+      <button onClick={() => generatePDF(targetRef, { filename: "page.pdf" })}>
+        Download PDF
+      </button>
+      <div ref={targetRef}>
+        <img
+          className="logo"
+          src={coverImageUrl}
+          alt="logo"
+          style={{ width: "80%" }}
+        />
+      </div>
     </Box>
   );
 }
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: "row",
-    backgroundColor: "white",
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1,
-  },
-});

@@ -13,5 +13,10 @@ class UploadFileService {
   getFiles() {
     return http.get("/files");
   }
+  getFile(filename) {
+    return http.get("/files/" + filename, {
+      responseType: "blob",
+    });
+  }
 }
 export default new UploadFileService();
