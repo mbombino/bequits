@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { invoiceSlice } from "./invoiceSlice";
+import invoiceSlice from "./invoiceSlice";
 
 export const store = configureStore({
   reducer: {
-    user: invoiceSlice,
+    invoice: invoiceSlice,
   },
 });

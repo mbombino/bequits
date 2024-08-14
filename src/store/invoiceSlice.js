@@ -1,12 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  coverImageUrl: "",
-};
+/*const initialState ={
+  coverImageUrl:
+    "http://localhost:8080/files/jr-korpa-jrOJ35Rtkz0-unsplash.jpg",
+};*/
 
 export const invoiceSlice = createSlice({
-  name: "user",
-  initialState,
+  name: "invoice",
+  initialState: {
+    coverImageUrl:
+      "http://localhost:8080/files/jr-korpa-jrOJ35Rtkz0-unsplash.jpg",
+  },
 
   reducers: {
     setCoverImageUrl: (state, action) => {
