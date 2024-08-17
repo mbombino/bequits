@@ -6,7 +6,7 @@ import {
   FileUploadRounded,
 } from "@mui/icons-material";
 import UploadFileService from "../services/upload-files.service";
-import { setCoverImageUrl } from "../store/invoiceSlice";
+import { setCoverImageUrl, setLogoImage } from "../store/invoiceSlice";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -23,19 +23,27 @@ export default function UploadFile() {
     });
   }, []);
 
+  function getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
   const upload = (event) => {
     let currentFile = event.target.files[0];
 
-    const data = new FileReader();
-    data.addEventListener("load", () => {
-      setUploadedFile(data.result);
+    getBase64(currentFile).then((result) => {
+      setUploadedFile(result);
+      setLogoImageSelected(true);
+      dispatch(setLogoImage(result));
     });
-    data.readAsDataURL(currentFile);
-    setLogoImageSelected(true);
   };
 
   return (
-    <Box mt={6} ml={6}>
+    <Box m={5}>
       <Typography variant="h5" color={"white"}>
         Templates
       </Typography>
@@ -142,7 +150,7 @@ export default function UploadFile() {
               <div key={index} style={{ marginTop: 2 }}>
                 <img
                   src={file.url}
-                  style={{ width: "80%", borderRadius: 5 }}
+                  style={{ width: "80%", borderRadius: 5, height: 100 }}
                   onClick={() => {
                     dispatch(setCoverImageUrl(file.url));
                   }}

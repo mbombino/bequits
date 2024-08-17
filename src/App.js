@@ -3,10 +3,16 @@ import React from "react";
 import BillDetails from "./components/BillDetails";
 import ItemList from "./components/ItemList";
 import TotalAmount from "./components/TotalAmount";
-import { Grid, Paper, Box, Card } from "@mui/material";
+import { Grid, Paper, Box, Button } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
+import { Settings } from "@mui/icons-material";
+import { PDFViewer } from "@react-pdf/renderer";
 
 import UploadFile from "./components/upload-files.component";
 import PDFPreview from "./components/pdf-preview.component";
+import InvoiceDetails from "./components/invoice-details.component";
 
 function App() {
   const [items, setItems] = React.useState([]);
@@ -24,22 +30,17 @@ function App() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box>
       <Grid container spacing={0}>
-        <Grid item xs={2.6} bgcolor={"black"}>
+        <Grid item xs={2.5} bgcolor={"black"}>
           <UploadFile />
         </Grid>
+
         <Grid item xs={5}>
-          <Paper
-            elevation={0}
-            style={{
-              height: 800,
-            }}
-          >
-            Invoice details
-          </Paper>
+          <InvoiceDetails />
         </Grid>
-        <Grid item xs={4.4} bgcolor={"#f1f1f1"}>
+
+        <Grid item xs={4.5} bgcolor={"#f1f1f1"}>
           <PDFPreview />
         </Grid>
       </Grid>

@@ -1,55 +1,118 @@
-import generatePDF from "react-to-pdf";
-import { Box, Typography, Button } from "@mui/material";
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  PDFDownloadLink,
+  BlobProvider,
+} from "@react-pdf/renderer";
+import {
+  Box,
+  Typography,
+  Button,
+  Grid,
+  IconButton,
+  Drawer,
+  Paper,
+  Menu,
+  MenuItem,
+  MenuList,
+  ListItemText,
+  Divider,
+  ListItemIcon,
+} from "@mui/material";
 
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import { useSelector } from "react-redux";
 import uploadFilesService from "../services/upload-files.service";
+import {
+  Download,
+  DownloadDoneRounded,
+  Settings,
+  SettingsOutlined,
+  Cloud,
+  ContentCut,
+  ContentCopy,
+  ContentPaste,
+} from "@mui/icons-material";
 
 export default function PDFPreview() {
   const [defaultCoverImage, setDefaultCoverImage] = useState();
   const coverImageUrl = useSelector((state) => state.invoice.coverImageUrl);
+  const logoImage = useSelector((state) => state.invoice.logoImage);
+  const [drawer, setDrawer] = useState(false);
 
-  useEffect(() => {
-    uploadFilesService.getFile("Screenshot_1720896535.png").then((blob) => {
-      const fileReaderInstance = new FileReader();
-      fileReaderInstance.readAsDataURL(blob.data);
-      fileReaderInstance.onload = () => {
-        const base64Data = fileReaderInstance.result;
-        console.log(blob.headers["content-type"]);
-        setDefaultCoverImage(`data:image/png;base64,${base64Data}`);
-      };
-    });
-  }, []);
-
-  const [inputValue, setInputValue] = useState({
-    note: "",
-    date: "",
-    issued: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setInputValue({
-      [name]: value,
-    });
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
-  const targetRef = useRef();
+  /*useEffect(() => {
+    uploadFilesService.getFile("Screenshot_1720896535.png").then((blob) => {
+    
+    const fileReaderInstance = new FileReader();
+    fileReaderInstance.readAsDataURL(blob.data);
+    fileReaderInstance.onload = () => {
+      const base64Data = fileReaderInstance.result;
+      console.log(base64Data);
+      setDefaultCoverImage(`data:image/png;${base64Data.split(";")[1]}`);
+    };
+    //});
+  }, []);*/
 
   return (
-    <Box>
-      <button onClick={() => generatePDF(targetRef, { filename: "page.pdf" })}>
-        Download PDF
-      </button>
-      <div ref={targetRef}>
+    <>
+      <Box m={5}>
+        <Typography variant="h5">PDF preview</Typography>
+      </Box>
+
+      <Box
+        m={5}
+        bgcolor={"white"}
+        boxShadow={"1px 1px 10px 0px gray"}
+        borderRadius={0.5}
+      >
         <img
-          className="logo"
           src={coverImageUrl}
-          alt="logo"
-          style={{ width: "80%" }}
+          style={{
+            width: "100%",
+            height: 100,
+            borderTopLeftRadius: 2,
+            borderTopRightRadius: 2,
+          }}
         />
-      </div>
-    </Box>
+        <Box mt={5} ml={2}>
+          <Typography variant="h5">Invoice</Typography>
+          <Box style={styles.titleContainer}>
+            <Box style={styles.spaceBetween}>
+              <Typography>#001 * August 14, 2024</Typography>
+              <img src={logoImage} style={styles.logo} />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </>
   );
 }
+const styles = StyleSheet.create({
+  spaceBetween: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    color: "#3E3E3E",
+  },
+
+  titleContainer: { flexDirection: "row", marginTop: 24 },
+
+  logo: { width: 150, alignSelf: "flex-end" },
+
+  reportTitle: { fontSize: 16, textAlign: "right" },
+});
