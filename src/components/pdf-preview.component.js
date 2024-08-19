@@ -24,10 +24,10 @@ import {
   ListItemIcon,
 } from "@mui/material";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 
 import { useSelector } from "react-redux";
-import uploadFilesService from "../services/upload-files.service";
+
 import {
   Download,
   DownloadDoneRounded,
@@ -44,29 +44,24 @@ export default function PDFPreview() {
   const coverImageUrl = useSelector((state) => state.invoice.coverImageUrl);
   const logoImage = useSelector((state) => state.invoice.logoImage);
   const itemsData = useSelector((state) => state.invoice.itemsData);
-  const [drawer, setDrawer] = useState(false);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const InvoiceTitle = () => (
+    <View style={styles.titleContainer}>
+      <View style={styles.spaceBetween}>
+        <Image style={styles.logo} src={logoImage} />
+        <Text style={styles.reportTitle}>Xpress Enterprises</Text>
+      </View>
+    </View>
+  );
+  const Invoice = () => {
+    return (
+      <Document>
+        <Page size="A4" style={styles.page}>
+          <InvoiceTitle />
+        </Page>
+      </Document>
+    );
   };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  /*useEffect(() => {
-    uploadFilesService.getFile("Screenshot_1720896535.png").then((blob) => {
-    
-    const fileReaderInstance = new FileReader();
-    fileReaderInstance.readAsDataURL(blob.data);
-    fileReaderInstance.onload = () => {
-      const base64Data = fileReaderInstance.result;
-      console.log(base64Data);
-      setDefaultCoverImage(`data:image/png;${base64Data.split(";")[1]}`);
-    };
-    //});
-  }, []);*/
 
   return (
     <>

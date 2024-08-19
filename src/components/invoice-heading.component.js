@@ -1,0 +1,85 @@
+import {
+  Box,
+  MenuItem,
+  TextField,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import { SettingsOutlined } from "@mui/icons-material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
+import { useSelector, useDispatch } from "react-redux";
+
+export default function HeadingSection() {
+  const currencyTypes = useSelector((state) => state.invoice.currencyTypes);
+  const invoiceTypes = useSelector((state) => state.invoice.invoiceTypes);
+  const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
+  return (
+    <Box>
+      <Box m={5} display={"flex"} justifyContent={"space-between"}>
+        <Typography variant="h5">Invoice details</Typography>
+        <IconButton style={{ borderRadius: 10 }}>
+          <SettingsOutlined />
+        </IconButton>
+      </Box>
+      <Box display={"flex"}>
+        <Box
+          component="form"
+          sx={{
+            "& .MuiTextField-root": { ml: 5, width: "12ch" },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <TextField variant="outlined" select defaultValue="ZAR" size="small">
+            {currencyTypes.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+        <Box
+          component="form"
+          sx={{
+            "& .MuiTextField-root": { ml: 1, width: "10ch" },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <TextField variant="outlined" select defaultValue={1} size="small">
+            {invoiceTypes.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+        <Box
+          component="form"
+          sx={{
+            "& .MuiTextField-root": { ml: 1, width: "15ch" },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker slotProps={{ textField: { size: "small" } }} />
+          </LocalizationProvider>
+        </Box>
+
+        <Box
+          component="form"
+          sx={{
+            "& .MuiTextField-root": { ml: 1, width: "9ch" },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <TextField size="small" defaultValue={invoiceNumber}></TextField>
+        </Box>
+      </Box>
+    </Box>
+  );
+}

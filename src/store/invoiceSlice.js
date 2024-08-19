@@ -42,7 +42,7 @@ export const invoiceSlice = createSlice({
     billReceiver: "",
     itemsData: [
       {
-        itemNumber: 1,
+        itemNumber: Date.now().toString(32) + Math.random().toString(16),
         itemDescription: "",
         itemQuantity: 1,
         itemRate: 0,
@@ -88,7 +88,7 @@ export const invoiceSlice = createSlice({
     },
     setDeleteItemsData: (state, action) => {
       const itemToDelete = state.itemsData.find(
-        (e) => e.itemNumber === action.payload.itemNumber
+        (e) => e.itemNumber == action.payload
       );
 
       state.itemsData.splice(state.itemsData.indexOf(itemToDelete), 1);
