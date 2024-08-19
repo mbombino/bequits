@@ -1,5 +1,7 @@
+import React, { useState } from "react";
 import {
   Add,
+  DeleteForeverRounded,
   MoreHorizRounded,
   Settings,
   SettingsOutlined,
@@ -11,6 +13,10 @@ import {
   Typography,
   MenuItem,
   Button,
+  Menu,
+  Switch,
+  InputAdornment,
+  Divider,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -24,43 +30,103 @@ import {
   PDFDownloadLink,
   BlobProvider,
 } from "@react-pdf/renderer";
+import { Dayjs } from "dayjs";
+import {
+  setDeleteItemsData,
+  setEditItemsData,
+  setAddItemsData,
+} from "../store/invoiceSlice";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+const label = { inputProps: { "aria-label": "Switch demo" } };
 
 export default function InvoiceDetails() {
   const logoImage = useSelector((state) => state.invoice.logoImage);
-  const currencies = [
-    {
-      value: "USD",
-      label: "USD ($)",
-    },
-    {
-      value: "EUR",
-      label: "€",
-    },
-    {
-      value: "BTC",
-      label: "฿",
-    },
-    {
-      value: "JPY",
-      label: "¥",
-    },
-  ];
-  const invoiceTypes = [
-    {
-      value: 1,
-      label: "Invoice",
-    },
-    {
-      value: 2,
-      label: "Quote",
-    },
-    {
-      value: 3,
-      label: "Estimate",
-    },
-  ];
+  const currencyTypes = useSelector((state) => state.invoice.currencyTypes);
+  const invoiceTypes = useSelector((state) => state.invoice.invoiceTypes);
+  const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
+  const itemsData = useSelector((state) => state.invoice.itemsData);
+
+  const dispatch = useDispatch();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const [checked, setChecked] = React.useState(false);
+  const [rate, setRate] = useState(undefined);
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
+
+  const handleAddItem = () => {
+    const uid = Date.now().toString(32) + Math.random().toString(16);
+    const itemToAdd = {
+      itemNumber: uid,
+      itemDescription: "",
+      itemQuantity: 1,
+      itemRate: 0,
+      itemTax: 8,
+    };
+
+    dispatch(setAddItemsData(itemToAdd));
+  };
+
+  const handleEditItemDescription = (event, { item }) => {
+    const itemToEdit = {
+      itemNumber: item.itemNumber,
+      itemDescription: event.target.value,
+      itemQuantity: item.itemQuantity,
+      itemRatePrefix: item.itemRatePrefix,
+      itemRate: item.itemRate,
+      itemTax: item.itemTax,
+    };
+
+    dispatch(setEditItemsData(itemToEdit));
+  };
+  const handleEditItemQuantity = (event, { item }) => {
+    const itemToEdit = {
+      itemNumber: item.itemNumber,
+      itemDescription: item.itemDescription,
+      itemQuantity: event.target.value,
+      itemRatePrefix: item.itemRatePrefix,
+      itemRate: item.itemRate,
+      itemTax: item.itemTax,
+    };
+    dispatch(setEditItemsData(itemToEdit));
+  };
+  const handleEditItemRate = (event, { item }) => {
+    let textFieldPrefix = undefined;
+    if (event.target.value != "") {
+      textFieldPrefix = "R";
+    }
+
+    const itemToEdit = {
+      itemNumber: item.itemNumber,
+      itemDescription: item.itemDescription,
+      itemQuantity: item.itemQuantity,
+
+      itemRatePrefix: textFieldPrefix,
+      itemRate: event.target.value,
+      itemTax: item.itemTax,
+    };
+    dispatch(setEditItemsData(itemToEdit));
+  };
+  const handleEditItemTax = (event, { item }) => {
+    const itemToEdit = {
+      itemNumber: item.itemNumber,
+      itemDescription: item.itemDescription,
+      itemQuantity: item.itemQuantity,
+      itemRate: item.itemRate,
+      itemTax: event.target.value,
+    };
+    dispatch(setEditItemsData(itemToEdit));
+  };
 
   const InvoiceTitle = () => (
     <View style={styles.titleContainer}>
@@ -83,13 +149,8 @@ export default function InvoiceDetails() {
     <>
       <Box m={5} display={"flex"} justifyContent={"space-between"}>
         <Typography variant="h5">Invoice details</Typography>
-        <IconButton
-          size="small"
-          style={{
-            borderRadius: 10,
-            boxShadow: "1px 1px 5px 0px gray",
-          }}
-        >
+
+        <IconButton style={{ borderRadius: 10 }}>
           <SettingsOutlined />
         </IconButton>
       </Box>
@@ -97,13 +158,13 @@ export default function InvoiceDetails() {
         <Box
           component="form"
           sx={{
-            "& .MuiTextField-root": { ml: 5, width: "8ch" },
+            "& .MuiTextField-root": { ml: 5, width: "12ch" },
           }}
           noValidate
           autoComplete="off"
         >
-          <TextField variant="outlined" select defaultValue="EUR" size="small">
-            {currencies.map((option) => (
+          <TextField variant="outlined" select defaultValue="ZAR" size="small">
+            {currencyTypes.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -113,7 +174,7 @@ export default function InvoiceDetails() {
         <Box
           component="form"
           sx={{
-            "& .MuiTextField-root": { ml: 1, width: "15ch" },
+            "& .MuiTextField-root": { ml: 1, width: "10ch" },
           }}
           noValidate
           autoComplete="off"
@@ -142,12 +203,12 @@ export default function InvoiceDetails() {
         <Box
           component="form"
           sx={{
-            "& .MuiTextField-root": { ml: 1, width: "8ch" },
+            "& .MuiTextField-root": { ml: 1, width: "9ch" },
           }}
           noValidate
           autoComplete="off"
         >
-          <TextField size="small"></TextField>
+          <TextField size="small" defaultValue={invoiceNumber}></TextField>
         </Box>
       </Box>
       <Box display={"flex"} m={2}>
@@ -193,51 +254,138 @@ export default function InvoiceDetails() {
         <Typography>Qty</Typography>
         <Typography>Rate</Typography>
       </Box>
-      <Box display={"flex"}>
-        <Box
-          component="form"
-          sx={{
-            "& .MuiTextField-root": { ml: 5, mt: 2, width: "20ch" },
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          <TextField
-            multiline={true}
-            maxRows={2}
-            helperText={"Description of service or task"}
-          ></TextField>
-        </Box>
-        <Box
-          component="form"
-          sx={{
-            "& .MuiTextField-root": { ml: 1, mt: 2, width: "8ch" },
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          <TextField></TextField>
-        </Box>
-        <Box
-          component="form"
-          sx={{
-            "& .MuiTextField-root": { ml: 1, mt: 2, width: "14ch" },
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          <TextField></TextField>
-        </Box>
-        <Box mt={3} ml={1}>
-          <IconButton style={{ borderRadius: 10 }} size="small">
-            <MoreHorizRounded />
-          </IconButton>
-        </Box>
-      </Box>
+      {itemsData.length > 0 &&
+        itemsData.map((item) => (
+          <Box display={"flex"} key={item.itemNumber}>
+            <Box
+              component="form"
+              sx={{
+                "& .MuiTextField-root": { ml: 5, mt: 2, width: "20ch" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                multiline={true}
+                maxRows={2}
+                helperText={"Description of service or task"}
+                onChange={(event) => handleEditItemDescription(event, { item })}
+              ></TextField>
+            </Box>
+            <Box
+              component="form"
+              sx={{
+                "& .MuiTextField-root": { ml: 1, mt: 2, width: "8ch" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                defaultValue={item.itemQuantity}
+                onChange={(event) => handleEditItemQuantity(event, { item })}
+              ></TextField>
+            </Box>
+            <Box
+              component="form"
+              sx={{
+                "& .MuiTextField-root": { ml: 1, mt: 2, width: "14ch" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                defaultValue={item.itemRate}
+                onChange={(event) => handleEditItemRate(event, { item })}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      {item.itemRatePrefix}
+                    </InputAdornment>
+                  ),
+                }}
+              ></TextField>
+            </Box>
+            <Box mt={3} ml={1}>
+              <IconButton
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                size="small"
+                style={{
+                  borderRadius: 10,
+                }}
+                onClick={handleClick}
+              >
+                <MoreHorizRounded />
+              </IconButton>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+                sx={{ width: 200 }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    dispatch(setDeleteItemsData(item));
+                    handleClose();
+                  }}
+                >
+                  <Box
+                    display={"flex"}
+                    justifyContent={"space-between"}
+                    width={200}
+                  >
+                    <Typography mt={1}>Delete</Typography>
+                    <IconButton size="small">
+                      <DeleteForeverRounded />
+                    </IconButton>
+                  </Box>
+                </MenuItem>
+                <Divider />
+                <MenuItem>
+                  <Box
+                    display={"flex"}
+                    justifyContent={"space-between"}
+                    width={200}
+                  >
+                    <Typography mt={1}>Taxable</Typography>
+                    <Switch
+                      checked={checked}
+                      onChange={handleChange}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  </Box>
+                </MenuItem>
+                {checked ? (
+                  <MenuItem>
+                    <TextField
+                      size="small"
+                      defaultValue={item.itemTax}
+                      onChange={(event) => handleEditItemTax(event, { item })}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">%</InputAdornment>
+                        ),
+                      }}
+                    />
+                  </MenuItem>
+                ) : (
+                  <></>
+                )}
+              </Menu>
+            </Box>
+          </Box>
+        ))}
+
       <Box ml={5} mt={1}>
         <Button
           variant="outlined"
           style={{ borderStyle: "dashed", height: 50, width: "92%" }}
+          onClick={handleAddItem}
         >
           <Add />
           <Typography style={{ textTransform: "none" }}>Add item</Typography>

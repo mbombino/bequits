@@ -43,6 +43,7 @@ export default function PDFPreview() {
   const [defaultCoverImage, setDefaultCoverImage] = useState();
   const coverImageUrl = useSelector((state) => state.invoice.coverImageUrl);
   const logoImage = useSelector((state) => state.invoice.logoImage);
+  const itemsData = useSelector((state) => state.invoice.itemsData);
   const [drawer, setDrawer] = useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -97,6 +98,18 @@ export default function PDFPreview() {
             </Box>
           </Box>
         </Box>
+        {itemsData.length > 0 &&
+          itemsData.map((item) => (
+            <Box
+              key={item.itemNumber}
+              display={"flex"}
+              justifyContent={"space-between"}
+            >
+              <Typography>{item.itemDescription}</Typography>
+              <Typography>{item.itemQuantity}</Typography>
+              <Typography>{item.itemRate}</Typography>
+            </Box>
+          ))}
       </Box>
     </>
   );

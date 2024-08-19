@@ -127,7 +127,7 @@ export default function UploadFile() {
       <Box mt={2}>
         <Button
           variant="outlined"
-          style={{ borderStyle: "dashed", height: 80, width: "80%" }}
+          style={{ borderStyle: "dashed", height: 80, width: "100%" }}
           component="label"
         >
           <AddAPhotoRounded sx={{ color: "white" }} />
@@ -135,7 +135,7 @@ export default function UploadFile() {
         </Button>
       </Box>
       <Box>
-        <Button style={{ width: "80%" }} component="label">
+        <Button style={{ width: "100%" }} component="label">
           <FileUploadRounded sx={{ color: "white" }} />
           <Typography color={"white"} style={{ textTransform: "none" }}>
             Upload
@@ -150,7 +150,7 @@ export default function UploadFile() {
               <div key={index} style={{ marginTop: 2 }}>
                 <img
                   src={file.url}
-                  style={{ width: "80%", borderRadius: 5, height: 100 }}
+                  style={{ width: "100%", borderRadius: 5, height: 100 }}
                   onClick={() => {
                     dispatch(setCoverImageUrl(file.url));
                   }}
