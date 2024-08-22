@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Add,
   DeleteForeverRounded,
@@ -23,6 +23,7 @@ import {
 } from "../store/invoiceSlice";
 
 import { useSelector, useDispatch } from "react-redux";
+import { keyboard } from "@testing-library/user-event/dist/keyboard";
 export default function ItemsSections() {
   const itemsData = useSelector((state) => state.invoice.itemsData);
 
@@ -40,6 +41,70 @@ export default function ItemsSections() {
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
+  };
+
+  const handleCheckQuantityDigit = (event) => {
+    const arrowKeyCodes = [37, 38, 39, 40];
+    const numPadKeyCodes = [96, 97, 98, 99, 100, 101, 102, 103, 104, 105];
+    const backspaceKeyCode = 8;
+    let input = document.getElementById("qty-input");
+    const cursorPosition = input.selectionStart;
+
+    if (
+      (((event.keyCode < 48 && !arrowKeyCodes.includes(event.keyCode)) ||
+        (event.keyCode > 57 && !numPadKeyCodes.includes(event.keyCode))) &&
+        !(event.keyCode === backspaceKeyCode)) ||
+      (cursorPosition === 0 && Number(event.key) === 0 && input.value !== "")
+    ) {
+      event.preventDefault();
+    }
+    if (Number(input.value[0]) === 0) {
+      let newValue = input.value.replace("0", "");
+      input.value = newValue;
+    }
+  };
+
+  const handleCheckRateDigit = (event) => {
+    const arrowKeyCodes = [37, 38, 39, 40];
+    const numPadKeyCodes = [96, 97, 98, 99, 100, 101, 102, 103, 104, 105];
+    const floatingKeyCode = 190;
+    const backspaceKeyCode = 8;
+    let input = document.getElementById("rate-input");
+    const cursorPosition = input.selectionStart;
+
+    if (
+      (((event.keyCode < 48 && !arrowKeyCodes.includes(event.keyCode)) ||
+        (event.keyCode > 57 && !numPadKeyCodes.includes(event.keyCode))) &&
+        !(
+          event.keyCode === floatingKeyCode ||
+          event.keyCode === backspaceKeyCode
+        )) ||
+      (input.value.split(".")[1]?.length + 1 > 2 &&
+        event.keyCode !== backspaceKeyCode) ||
+      (cursorPosition === 0 && Number(event.key) === 0 && input.value !== "") ||
+      (input.value.includes(".") && event.key === ".") ||
+      (Number(input.value[0]) === 0 &&
+        Number(event.key) === 0 &&
+        !input.value.includes("."))
+    ) {
+      event.preventDefault();
+    }
+    if (
+      (Number(input.value[0]) === 0 && !input.value.length === 1) ||
+      (Number(input.value[0]) === 0 && Number(input.value[1]) > 0)
+    ) {
+      let newValue = input.value.replace("0", "");
+      input.value = newValue;
+    }
+    if (
+      (Number(input.value[1]) === 0 && cursorPosition === 0) ||
+      (Number(input.value[1]) === 0 && cursorPosition === 1)
+    ) {
+      let newValue = input.value.replace("0", "");
+      input.value = newValue;
+      input.focus();
+      input.setSelectionRange(1, 1);
+    }
   };
 
   const handleAddItem = () => {
@@ -68,8 +133,6 @@ export default function ItemsSections() {
     dispatch(setEditItemsData(itemToEdit));
   };
   const handleEditItemQuantity = (event, { item }) => {
-    //const quantity = Number(event.target.value);
-
     const itemToEdit = {
       itemNumber: item.itemNumber,
       itemDescription: item.itemDescription,
@@ -82,7 +145,7 @@ export default function ItemsSections() {
   };
   const handleEditItemRate = (event, { item }) => {
     let textFieldPrefix = undefined;
-    if (event.target.value != "") {
+    if (event.target.value !== "") {
       textFieldPrefix = "R";
     }
 
@@ -179,6 +242,8 @@ export default function ItemsSections() {
               autoComplete="off"
             >
               <TextField
+                id="qty-input"
+                onKeyDown={(event) => handleCheckQuantityDigit(event)}
                 defaultValue={item.itemQuantity}
                 onChange={(event) => handleEditItemQuantity(event, { item })}
               ></TextField>
@@ -192,6 +257,8 @@ export default function ItemsSections() {
               autoComplete="off"
             >
               <TextField
+                id="rate-input"
+                onKeyDown={(event) => handleCheckRateDigit(event)}
                 defaultValue={item.itemRate}
                 onChange={(event) => handleEditItemRate(event, { item })}
                 InputProps={{

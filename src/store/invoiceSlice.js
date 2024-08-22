@@ -50,6 +50,7 @@ export const invoiceSlice = createSlice({
         itemTax: 8,
       },
     ],
+    bankingDetails: "",
 
     coverImageUrl:
       "http://localhost:8080/files/jr-korpa-jrOJ35Rtkz0-unsplash.jpg",
@@ -88,10 +89,13 @@ export const invoiceSlice = createSlice({
     },
     setDeleteItemsData: (state, action) => {
       const itemToDelete = state.itemsData.find(
-        (e) => e.itemNumber == action.payload
+        (e) => e.itemNumber === action.payload
       );
 
       state.itemsData.splice(state.itemsData.indexOf(itemToDelete), 1);
+    },
+    setBankingDetails: (state, action) => {
+      state.bankingDetails = action.payload;
     },
   },
 });
@@ -102,5 +106,6 @@ export const {
   setAddItemsData,
   setEditItemsData,
   setDeleteItemsData,
+  setBankingDetails,
 } = invoiceSlice.actions;
 export default invoiceSlice.reducer;
