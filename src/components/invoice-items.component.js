@@ -23,14 +23,17 @@ import {
 } from "../store/invoiceSlice";
 
 import { useSelector, useDispatch } from "react-redux";
-import { keyboard } from "@testing-library/user-event/dist/keyboard";
 export default function ItemsSections() {
+  const [anchorEl, setAnchorEl] = useState(null);
   const itemsData = useSelector((state) => state.invoice.itemsData);
-
   const dispatch = useDispatch();
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  const arrowKeyCodes = [37, 38, 39, 40];
+  const numPadKeyCodes = [96, 97, 98, 99, 100, 101, 102, 103, 104, 105];
+  const floatingKeyCode = 190;
+  const backspaceKeyCode = 8;
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -43,11 +46,8 @@ export default function ItemsSections() {
     setChecked(event.target.checked);
   };
 
-  const handleCheckQuantityDigit = (event) => {
-    const arrowKeyCodes = [37, 38, 39, 40];
-    const numPadKeyCodes = [96, 97, 98, 99, 100, 101, 102, 103, 104, 105];
-    const backspaceKeyCode = 8;
-    let input = document.getElementById("qty-input");
+  const handleCheckQuantityDigit = (event, { item }) => {
+    let input = document.getElementById(item.itemNumber + ".qty-input");
     const cursorPosition = input.selectionStart;
 
     if (
@@ -64,12 +64,8 @@ export default function ItemsSections() {
     }
   };
 
-  const handleCheckRateDigit = (event) => {
-    const arrowKeyCodes = [37, 38, 39, 40];
-    const numPadKeyCodes = [96, 97, 98, 99, 100, 101, 102, 103, 104, 105];
-    const floatingKeyCode = 190;
-    const backspaceKeyCode = 8;
-    let input = document.getElementById("rate-input");
+  const handleCheckRateDigit = (event, { item }) => {
+    let input = document.getElementById(item.itemNumber + ".rate-input");
     const cursorPosition = input.selectionStart;
 
     if (
@@ -80,7 +76,11 @@ export default function ItemsSections() {
           event.keyCode === backspaceKeyCode
         )) ||
       (input.value.split(".")[1]?.length + 1 > 2 &&
-        event.keyCode !== backspaceKeyCode) ||
+        !(
+          event.keyCode === backspaceKeyCode ||
+          arrowKeyCodes.includes(event.keyCode)
+        ) &&
+        cursorPosition > input.value.split(".")[0]?.length) ||
       (cursorPosition === 0 && Number(event.key) === 0 && input.value !== "") ||
       (input.value.includes(".") && event.key === ".") ||
       (Number(input.value[0]) === 0 &&
@@ -88,22 +88,6 @@ export default function ItemsSections() {
         !input.value.includes("."))
     ) {
       event.preventDefault();
-    }
-    if (
-      (Number(input.value[0]) === 0 && !input.value.length === 1) ||
-      (Number(input.value[0]) === 0 && Number(input.value[1]) > 0)
-    ) {
-      let newValue = input.value.replace("0", "");
-      input.value = newValue;
-    }
-    if (
-      (Number(input.value[1]) === 0 && cursorPosition === 0) ||
-      (Number(input.value[1]) === 0 && cursorPosition === 1)
-    ) {
-      let newValue = input.value.replace("0", "");
-      input.value = newValue;
-      input.focus();
-      input.setSelectionRange(1, 1);
     }
   };
 
@@ -144,6 +128,17 @@ export default function ItemsSections() {
     dispatch(setEditItemsData(itemToEdit));
   };
   const handleEditItemRate = (event, { item }) => {
+    let input = document.getElementById(item.itemNumber + ".rate-input");
+    const cursorPosition = input.selectionStart;
+    if (
+      (cursorPosition === 0 && input.value.length > 2) ||
+      (cursorPosition === 1 && input.value.length > 2) ||
+      (input.value[1] > 0 && input.value.length === 2)
+    ) {
+      let newValue = input.value.replace(/^0+/, "");
+      input.value = parseFloat(newValue);
+    }
+
     let textFieldPrefix = undefined;
     if (event.target.value !== "") {
       textFieldPrefix = "R";
@@ -184,7 +179,7 @@ export default function ItemsSections() {
           <TextField
             multiline={true}
             maxRows={2}
-            helperText={"Bill to: Enter name and address"}
+            placeholder={"Bill to: Enter name and address"}
           ></TextField>
         </Box>
         <Box
@@ -198,7 +193,7 @@ export default function ItemsSections() {
           <TextField
             multiline={true}
             maxRows={2}
-            helperText={"From: Enter your name and address"}
+            placeholder={"From: Enter your name and address"}
           ></TextField>
         </Box>
       </Box>
@@ -229,7 +224,7 @@ export default function ItemsSections() {
               <TextField
                 multiline={true}
                 maxRows={2}
-                helperText={"Description of service or task"}
+                placeholder={"Description of service"}
                 onChange={(event) => handleEditItemDescription(event, { item })}
               ></TextField>
             </Box>
@@ -242,8 +237,8 @@ export default function ItemsSections() {
               autoComplete="off"
             >
               <TextField
-                id="qty-input"
-                onKeyDown={(event) => handleCheckQuantityDigit(event)}
+                id={item.itemNumber + ".qty-input"}
+                onKeyDown={(event) => handleCheckQuantityDigit(event, { item })}
                 defaultValue={item.itemQuantity}
                 onChange={(event) => handleEditItemQuantity(event, { item })}
               ></TextField>
@@ -257,8 +252,8 @@ export default function ItemsSections() {
               autoComplete="off"
             >
               <TextField
-                id="rate-input"
-                onKeyDown={(event) => handleCheckRateDigit(event)}
+                id={item.itemNumber + ".rate-input"}
+                onKeyDown={(event) => handleCheckRateDigit(event, { item })}
                 defaultValue={item.itemRate}
                 onChange={(event) => handleEditItemRate(event, { item })}
                 InputProps={{
@@ -274,7 +269,7 @@ export default function ItemsSections() {
               <IconButton
                 id={item.itemNumber}
                 aria-controls={
-                  open ? `${item.itemNumber.split(".")[0]}` : undefined
+                  open ? `${item.itemNumber + ".menu"}` : undefined
                 }
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
@@ -288,7 +283,7 @@ export default function ItemsSections() {
               </IconButton>
 
               <Menu
-                id={item.itemNumber.split(".")[0]}
+                id={item.itemNumber + ".menu"}
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
