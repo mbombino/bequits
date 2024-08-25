@@ -15,9 +15,15 @@ import {
   RadioGroup,
   Menu,
   Divider,
+  Switch,
 } from "@mui/material";
 
-import { Delete, Percent, SettingsOutlined } from "@mui/icons-material";
+import {
+  Delete,
+  MoreVertRounded,
+  Percent,
+  SettingsOutlined,
+} from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
 import { setBankingDetails } from "../store/invoiceSlice";
 
@@ -27,6 +33,11 @@ export default function PaymentSection() {
   const [value, setValue] = React.useState("percent");
   const [discountHidden, setDiscountHidden] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [contractChecked, setContractChecked] = React.useState(false);
+
+  const handleContractChecked = (event) => {
+    setContractChecked(event.target.checked);
+  };
 
   const openExtras = Boolean(anchorEl);
 
@@ -81,7 +92,7 @@ export default function PaymentSection() {
           aria-expanded={openExtras ? "true" : undefined}
           onClick={handlePaymentExtrasOpen}
         >
-          <SettingsOutlined />
+          <MoreVertRounded />
         </IconButton>
         <Menu
           id="menu"
@@ -91,24 +102,59 @@ export default function PaymentSection() {
           MenuListProps={{
             "aria-labelledby": "icon-button",
           }}
-          sx={{ width: 200 }}
+          sx={{ width: 250 }}
         >
           {discountHidden ? (
-            <MenuItem
-              onClick={() => {
-                setDiscountHidden(false);
-                handlePaymentExtrasClose();
-              }}
-            >
-              <Box display={"flex"} width={200}>
-                <Typography>Add a discount</Typography>
-                <IconButton size="small">
-                  <Percent sx={{ width: 17, height: 17 }} />
-                </IconButton>
+            <>
+              <MenuItem
+                onClick={() => {
+                  setDiscountHidden(false);
+                  handlePaymentExtrasClose();
+                }}
+              >
+                <Box
+                  display={"flex"}
+                  width={250}
+                  justifyContent={"space-between"}
+                >
+                  <Typography>Add a discount</Typography>
+                  <IconButton size="small">
+                    <Percent sx={{ width: 17, height: 17 }} />
+                  </IconButton>
+                </Box>
+              </MenuItem>
+
+              <Divider />
+              <MenuItem>
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  width={250}
+                >
+                  <Typography mt={1}>Add a contract</Typography>
+                  <Switch
+                    checked={contractChecked}
+                    onChange={handleContractChecked}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                </Box>
+              </MenuItem>
+            </>
+          ) : (
+            <MenuItem>
+              <Box
+                display={"flex"}
+                justifyContent={"space-between"}
+                width={250}
+              >
+                <Typography mt={1}>Add a contract</Typography>
+                <Switch
+                  checked={contractChecked}
+                  onChange={handleContractChecked}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
               </Box>
             </MenuItem>
-          ) : (
-            <MenuItem sx={{ display: "none" }}></MenuItem>
           )}
         </Menu>
       </Box>
