@@ -2,6 +2,7 @@ import { Button, Box, Typography, Grid, Avatar } from "@mui/material";
 import {
   AddAPhotoRounded,
   ChangeCircleRounded,
+  Delete,
   DeleteForeverRounded,
   FileUploadRounded,
 } from "@mui/icons-material";
@@ -79,7 +80,7 @@ export default function UploadFile() {
                 component="label"
                 onClick={() => setLogoImageSelected(false)}
               >
-                <DeleteForeverRounded sx={{ color: "white" }} />
+                <Delete sx={{ color: "white" }} />
                 <Typography color={"white"} style={{ textTransform: "none" }}>
                   Delete
                 </Typography>

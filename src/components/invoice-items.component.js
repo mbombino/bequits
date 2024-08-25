@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Add,
+  Delete,
   DeleteForeverRounded,
   MoreHorizRounded,
 } from "@mui/icons-material";
@@ -305,7 +306,7 @@ export default function ItemsSections() {
                   >
                     <Typography mt={1}>Delete</Typography>
                     <IconButton size="small">
-                      <DeleteForeverRounded />
+                      <Delete />
                     </IconButton>
                   </Box>
                 </MenuItem>
