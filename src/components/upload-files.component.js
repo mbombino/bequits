@@ -42,6 +42,10 @@ export default function UploadFile() {
       dispatch(setLogoImage(result));
     });
   };
+  const handleLogoImageDeleteChange = () => {
+    setLogoImageSelected(false);
+    dispatch(setLogoImage(""));
+  };
 
   return (
     <Box m={5}>
@@ -78,7 +82,7 @@ export default function UploadFile() {
               <Button
                 style={{ height: 80 }}
                 component="label"
-                onClick={() => setLogoImageSelected(false)}
+                onClick={() => handleLogoImageDeleteChange()}
               >
                 <Delete sx={{ color: "white" }} />
                 <Typography color={"white"} style={{ textTransform: "none" }}>

@@ -89,16 +89,22 @@ export default function PDFPreview() {
             borderTopRightRadius: 2,
           }}
         />
-        <Box mt={5} ml={2}>
+        <Box>
           <Typography>{selectedInvoiceType.label}</Typography>
-          <Box style={styles.titleContainer}>
-            <Box style={styles.spaceBetween}>
-              {invoiceNumber !== "" ? (
+
+          <Box>
+            {invoiceNumber !== "" ? (
+              <Box display={"flex"} justifyContent={"space-between"}>
                 <Typography>#{invoiceNumber} * August 14, 2024</Typography>
-              ) : (
-                <Typography>{invoiceNumber} * August 14, 2024</Typography>
-              )}
-            </Box>
+                {logoImage !== "" ? (
+                  <img src={logoImage} alt="img" style={{ width: 30 }} />
+                ) : (
+                  <></>
+                )}
+              </Box>
+            ) : (
+              <Typography>{invoiceNumber} * August 14, 2024</Typography>
+            )}
           </Box>
         </Box>
         <Box mt={5} display={"flex"} gap={15}>
