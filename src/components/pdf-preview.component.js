@@ -43,6 +43,9 @@ export default function PDFPreview() {
   const [defaultCoverImage, setDefaultCoverImage] = useState();
   const coverImageUrl = useSelector((state) => state.invoice.coverImageUrl);
   const logoImage = useSelector((state) => state.invoice.logoImage);
+  const selectedInvoiceType = useSelector(
+    (state) => state.invoice.selectedInvoiceType
+  );
   const itemsData = useSelector((state) => state.invoice.itemsData);
 
   const InvoiceTitle = () => (
@@ -85,7 +88,7 @@ export default function PDFPreview() {
           }}
         />
         <Box mt={5} ml={2}>
-          <Typography variant="h5">Invoice</Typography>
+          <Typography>{selectedInvoiceType.label}</Typography>
           <Box style={styles.titleContainer}>
             <Box style={styles.spaceBetween}>
               <Typography>#001 * August 14, 2024</Typography>

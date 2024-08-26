@@ -8,13 +8,21 @@ import {
 import { MoreVertRounded, SettingsOutlined } from "@mui/icons-material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
 import { useSelector, useDispatch } from "react-redux";
+import { setSelectedInvoiceType } from "../store/invoiceSlice";
 
 export default function HeadingSection() {
   const currencyTypes = useSelector((state) => state.invoice.currencyTypes);
   const invoiceTypes = useSelector((state) => state.invoice.invoiceTypes);
   const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
+  const dispatch = useDispatch();
+
+  const handleInvoiceTypeSelection = (event) => {
+    const invoiceType = invoiceTypes.find(
+      (e) => e.value === event.target.value
+    );
+    dispatch(setSelectedInvoiceType(invoiceType));
+  };
   return (
     <Box>
       <Box m={5} display={"flex"} justifyContent={"space-between"}>
@@ -48,7 +56,13 @@ export default function HeadingSection() {
           noValidate
           autoComplete="off"
         >
-          <TextField variant="outlined" select defaultValue={1} size="small">
+          <TextField
+            variant="outlined"
+            select
+            defaultValue={1}
+            size="small"
+            onChange={(event) => handleInvoiceTypeSelection(event)}
+          >
             {invoiceTypes.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}

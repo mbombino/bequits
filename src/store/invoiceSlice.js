@@ -36,6 +36,7 @@ export const invoiceSlice = createSlice({
         label: "Estimate",
       },
     ],
+    selectedInvoiceType: { value: 1, label: "Invoice" },
     invoiceDate: "",
     invoiceNumber: "001",
     billSender: "",
@@ -69,6 +70,9 @@ export const invoiceSlice = createSlice({
     },
     setInvoiceTypes: (state, action) => {
       state.currencyTypes.push(action.payload);
+    },
+    setSelectedInvoiceType: (state, action) => {
+      state.selectedInvoiceType = action.payload;
     },
     setInvoiceNumber: (state, action) => {
       state.invoiceNumber = action.payload;
@@ -107,5 +111,6 @@ export const {
   setEditItemsData,
   setDeleteItemsData,
   setBankingDetails,
+  setSelectedInvoiceType,
 } = invoiceSlice.actions;
 export default invoiceSlice.reducer;

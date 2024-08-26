@@ -141,7 +141,7 @@ export default function PaymentSection() {
           sx={{ width: 250 }}
         >
           {discountHidden ? (
-            <>
+            <Box>
               <MenuItem
                 onClick={() => {
                   setDiscountHidden(false);
@@ -175,7 +175,7 @@ export default function PaymentSection() {
                   />
                 </Box>
               </MenuItem>
-            </>
+            </Box>
           ) : (
             <MenuItem>
               <Box
