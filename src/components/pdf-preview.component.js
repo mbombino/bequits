@@ -47,6 +47,7 @@ export default function PDFPreview() {
     (state) => state.invoice.selectedInvoiceType
   );
   const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
+  const billAddressData = useSelector((state) => state.invoice.billAddressData);
   const itemsData = useSelector((state) => state.invoice.itemsData);
 
   const InvoiceTitle = () => (
@@ -97,10 +98,12 @@ export default function PDFPreview() {
               ) : (
                 <Typography>{invoiceNumber} * August 14, 2024</Typography>
               )}
-
-              <img src={logoImage} style={styles.logo} />
             </Box>
           </Box>
+        </Box>
+        <Box mt={5} display={"flex"} gap={15}>
+          <Typography>From:{billAddressData.fromAddress}</Typography>
+          <Typography>Bill To:{billAddressData.toAddress}</Typography>
         </Box>
         {itemsData.length > 0 &&
           itemsData.map((item) => (

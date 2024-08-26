@@ -12,12 +12,14 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setSelectedInvoiceType,
   setInvoiceNumber,
+  setBillAddressData,
 } from "../store/invoiceSlice";
 
 export default function HeadingSection() {
   const currencyTypes = useSelector((state) => state.invoice.currencyTypes);
   const invoiceTypes = useSelector((state) => state.invoice.invoiceTypes);
   const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
+  const billAddressData = useSelector((state) => state.invoice.billAddressData);
   const dispatch = useDispatch();
 
   const handleInvoiceTypeSelection = (event) => {
@@ -28,6 +30,20 @@ export default function HeadingSection() {
   };
   const handleInvoiceNumberChange = (event) => {
     dispatch(setInvoiceNumber(event.target.value));
+  };
+  const handleFromBillAddressChange = (event) => {
+    const addressToAdd = {
+      fromAddress: event.target.value,
+      toAddress: billAddressData.toAddress,
+    };
+    dispatch(setBillAddressData(addressToAdd));
+  };
+  const handleToBillAddressChange = (event) => {
+    const addressToAdd = {
+      fromAddress: billAddressData.fromAddress,
+      toAddress: event.target.value,
+    };
+    dispatch(setBillAddressData(addressToAdd));
   };
   return (
     <Box>
@@ -98,6 +114,7 @@ export default function HeadingSection() {
           autoComplete="off"
         >
           <TextField
+            placeholder="Invoice #"
             size="small"
             defaultValue={invoiceNumber}
             onChange={(event) => handleInvoiceNumberChange(event)}
@@ -118,6 +135,7 @@ export default function HeadingSection() {
             multiline={true}
             rows={2}
             placeholder={"Bill to: Enter name and address"}
+            onChange={(event) => handleFromBillAddressChange(event)}
           ></TextField>
         </Box>
         <Box
@@ -133,6 +151,7 @@ export default function HeadingSection() {
             multiline={true}
             rows={2}
             placeholder={"From: Enter your name and address"}
+            onChange={(event) => handleToBillAddressChange(event)}
           ></TextField>
         </Box>
       </Box>

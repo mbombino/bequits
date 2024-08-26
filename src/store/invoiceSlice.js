@@ -39,8 +39,7 @@ export const invoiceSlice = createSlice({
     selectedInvoiceType: { value: 1, label: "Invoice" },
     invoiceDate: "",
     invoiceNumber: "001",
-    billSender: "",
-    billReceiver: "",
+    billAddressData: { fromAddress: "", toAddress: "" },
     itemsData: [
       {
         itemNumber: Date.now().toString(32) + Math.random().toString(16),
@@ -77,6 +76,9 @@ export const invoiceSlice = createSlice({
     setInvoiceNumber: (state, action) => {
       state.invoiceNumber = action.payload;
     },
+    setBillAddressData: (state, action) => {
+      state.billAddressData = action.payload;
+    },
     setAddItemsData: (state, action) => {
       state.itemsData.push(action.payload);
     },
@@ -108,6 +110,7 @@ export const {
   setCoverImageUrl,
   setLogoImage,
   setInvoiceNumber,
+  setBillAddressData,
   setAddItemsData,
   setEditItemsData,
   setDeleteItemsData,
