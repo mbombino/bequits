@@ -35,6 +35,11 @@ export default function PaymentSection() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [contractChecked, setContractChecked] = React.useState(false);
 
+  const arrowKeyCodes = [37, 38, 39, 40];
+  const numPadKeyCodes = [96, 97, 98, 99, 100, 101, 102, 103, 104, 105];
+  const floatingKeyCode = 190;
+  const backspaceKeyCode = 8;
+
   const handleContractChecked = (event) => {
     setContractChecked(event.target.checked);
   };
@@ -68,6 +73,11 @@ export default function PaymentSection() {
 
   const handleBankDetailsChange = (event) => {
     dispatch(setBankingDetails(event.target.value));
+    if (event.target.value === "") {
+      setChecked(false);
+    } else {
+      setChecked(true);
+    }
   };
   const handleFixedDepositChange = (event) => {
     setValue(event.target.value);
@@ -80,6 +90,32 @@ export default function PaymentSection() {
     setAnchorEl(null);
   };
 
+  const handleCheckDiscountDigit = (event) => {
+    let input = document.getElementById("discount-input");
+    const cursorPosition = input.selectionStart;
+
+    if (
+      (((event.keyCode < 48 && !arrowKeyCodes.includes(event.keyCode)) ||
+        (event.keyCode > 57 && !numPadKeyCodes.includes(event.keyCode))) &&
+        !(
+          event.keyCode === floatingKeyCode ||
+          event.keyCode === backspaceKeyCode
+        )) ||
+      (input.value.split(".")[1]?.length + 1 > 2 &&
+        !(
+          event.keyCode === backspaceKeyCode ||
+          arrowKeyCodes.includes(event.keyCode)
+        ) &&
+        cursorPosition > input.value.split(".")[0]?.length) ||
+      (cursorPosition === 0 && Number(event.key) === 0 && input.value !== "") ||
+      (input.value.includes(".") && event.key === ".") ||
+      (Number(input.value[0]) === 0 &&
+        Number(event.key) === 0 &&
+        !input.value.includes("."))
+    ) {
+      event.preventDefault();
+    }
+  };
   return (
     <Box>
       <Box m={5} display={"flex"} justifyContent={"space-between"}>
@@ -182,14 +218,11 @@ export default function PaymentSection() {
               <Fragment>
                 <TextField
                   size="small"
-                  //variant="standard"
                   placeholder="Enter your bank details"
                   onChange={(event) => handleBankDetailsChange(event)}
-                  //style={{ caretColor: "white",textst }}
                   inputProps={{ style: { color: "white" } }}
                   sx={{
                     "& .MuiInputBase-root": {
-                      //color: "black",
                       "& > fieldset": {
                         borderStyle: "hidden",
                       },
@@ -265,9 +298,11 @@ export default function PaymentSection() {
             >
               {value === "percent" ? (
                 <TextField
+                  id="discount-input"
                   size="small"
                   defaultValue={25}
-                  //onChange={(event) => handleEditItemRate(event, { item })}
+                  onKeyDown={(event) => handleCheckDiscountDigit(event)}
+                  //onChange={(event) => handleCheckRateDigit(event, { item })}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">%</InputAdornment>
@@ -276,8 +311,10 @@ export default function PaymentSection() {
                 ></TextField>
               ) : (
                 <TextField
+                  id="discount-input"
                   size="small"
                   defaultValue={25}
+                  onKeyDown={(event) => handleCheckDiscountDigit(event)}
                   //onChange={(event) => handleEditItemRate(event, { item })}
                   InputProps={{
                     startAdornment: (

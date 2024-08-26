@@ -168,36 +168,6 @@ export default function ItemsSections() {
   };
   return (
     <Box>
-      <Box display={"flex"} m={2}>
-        <Box
-          component="form"
-          sx={{
-            "& .MuiTextField-root": { ml: 3, width: "24ch" },
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          <TextField
-            multiline={true}
-            maxRows={2}
-            placeholder={"Bill to: Enter name and address"}
-          ></TextField>
-        </Box>
-        <Box
-          component="form"
-          sx={{
-            "& .MuiTextField-root": { ml: 1, width: "24ch" },
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          <TextField
-            multiline={true}
-            maxRows={2}
-            placeholder={"From: Enter your name and address"}
-          ></TextField>
-        </Box>
-      </Box>
       <Box
         display={"flex"}
         p={1}
@@ -223,9 +193,9 @@ export default function ItemsSections() {
               autoComplete="off"
             >
               <TextField
+                rows={1}
                 multiline={true}
-                maxRows={2}
-                placeholder={"Description of service"}
+                placeholder={"Description of service or product"}
                 onChange={(event) => handleEditItemDescription(event, { item })}
               ></TextField>
             </Box>

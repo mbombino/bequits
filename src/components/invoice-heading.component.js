@@ -5,7 +5,7 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-import { SettingsOutlined } from "@mui/icons-material";
+import { MoreVertRounded, SettingsOutlined } from "@mui/icons-material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
@@ -20,7 +20,7 @@ export default function HeadingSection() {
       <Box m={5} display={"flex"} justifyContent={"space-between"}>
         <Typography variant="h5">Invoice details</Typography>
         <IconButton style={{ borderRadius: 10 }}>
-          <SettingsOutlined />
+          <MoreVertRounded />
         </IconButton>
       </Box>
       <Box display={"flex"}>
@@ -78,6 +78,38 @@ export default function HeadingSection() {
           autoComplete="off"
         >
           <TextField size="small" defaultValue={invoiceNumber}></TextField>
+        </Box>
+      </Box>
+      <Box display={"flex"} m={2}>
+        <Box
+          component="form"
+          sx={{
+            "& .MuiTextField-root": { ml: 3, width: "24ch" },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <TextField
+            size="small"
+            multiline={true}
+            rows={2}
+            placeholder={"Bill to: Enter name and address"}
+          ></TextField>
+        </Box>
+        <Box
+          component="form"
+          sx={{
+            "& .MuiTextField-root": { ml: 1, width: "24ch" },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <TextField
+            size="small"
+            multiline={true}
+            rows={2}
+            placeholder={"From: Enter your name and address"}
+          ></TextField>
         </Box>
       </Box>
     </Box>
