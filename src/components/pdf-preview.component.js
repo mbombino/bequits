@@ -46,6 +46,7 @@ export default function PDFPreview() {
   const selectedInvoiceType = useSelector(
     (state) => state.invoice.selectedInvoiceType
   );
+  const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
   const itemsData = useSelector((state) => state.invoice.itemsData);
 
   const InvoiceTitle = () => (
@@ -91,7 +92,12 @@ export default function PDFPreview() {
           <Typography>{selectedInvoiceType.label}</Typography>
           <Box style={styles.titleContainer}>
             <Box style={styles.spaceBetween}>
-              <Typography>#001 * August 14, 2024</Typography>
+              {invoiceNumber !== "" ? (
+                <Typography>#{invoiceNumber} * August 14, 2024</Typography>
+              ) : (
+                <Typography>{invoiceNumber} * August 14, 2024</Typography>
+              )}
+
               <img src={logoImage} style={styles.logo} />
             </Box>
           </Box>

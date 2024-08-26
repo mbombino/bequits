@@ -107,6 +107,7 @@ export const invoiceSlice = createSlice({
 export const {
   setCoverImageUrl,
   setLogoImage,
+  setInvoiceNumber,
   setAddItemsData,
   setEditItemsData,
   setDeleteItemsData,
