@@ -11,16 +11,20 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setSelectedInvoiceType,
+  setInvoiceDate,
   setInvoiceNumber,
   setBillAddressData,
 } from "../store/invoiceSlice";
+import dayjs from "dayjs";
 
 export default function HeadingSection() {
   const currencyTypes = useSelector((state) => state.invoice.currencyTypes);
   const invoiceTypes = useSelector((state) => state.invoice.invoiceTypes);
+  const invoiceDate = useSelector((state) => state.invoice.invoiceDate);
   const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
   const billAddressData = useSelector((state) => state.invoice.billAddressData);
   const dispatch = useDispatch();
+  const defaultDate = new Date(invoiceDate);
 
   const handleInvoiceTypeSelection = (event) => {
     const invoiceType = invoiceTypes.find(
@@ -44,6 +48,19 @@ export default function HeadingSection() {
       toAddress: event.target.value,
     };
     dispatch(setBillAddressData(addressToAdd));
+  };
+  const handleInvoiceDateChange = (event) => {
+    dispatch(
+      setInvoiceDate(
+        new Date(
+          event.$d.getFullYear() +
+            "/" +
+            (event.$d.getMonth() + 1) +
+            "/" +
+            event.$d.getDate()
+        )
+      )
+    );
   };
   return (
     <Box>
@@ -101,7 +118,18 @@ export default function HeadingSection() {
           autoComplete="off"
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker slotProps={{ textField: { size: "small" } }} />
+            <DatePicker
+              slotProps={{ textField: { size: "small" } }}
+              defaultValue={dayjs(`
+                ${
+                  defaultDate.getFullYear().toString() +
+                  "/" +
+                  (defaultDate.getMonth() + 1).toString() +
+                  "/" +
+                  defaultDate.getDate().toString()
+                }`)}
+              onChange={(event) => handleInvoiceDateChange(event)}
+            />
           </LocalizationProvider>
         </Box>
 

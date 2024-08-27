@@ -37,7 +37,7 @@ export const invoiceSlice = createSlice({
       },
     ],
     selectedInvoiceType: { value: 1, label: "Invoice" },
-    invoiceDate: "",
+    invoiceDate: new Date(),
     invoiceNumber: "001",
     billAddressData: { fromAddress: "", toAddress: "" },
     itemsData: [
@@ -54,8 +54,8 @@ export const invoiceSlice = createSlice({
 
     coverImageUrl:
       "http://localhost:8080/files/jr-korpa-jrOJ35Rtkz0-unsplash.jpg",
+    logoImage: "",
   },
-  logoImage: "",
 
   reducers: {
     setCoverImageUrl: (state, action) => {
@@ -72,6 +72,9 @@ export const invoiceSlice = createSlice({
     },
     setSelectedInvoiceType: (state, action) => {
       state.selectedInvoiceType = action.payload;
+    },
+    setInvoiceDate: (state, action) => {
+      state.invoiceDate = action.payload;
     },
     setInvoiceNumber: (state, action) => {
       state.invoiceNumber = action.payload;
@@ -110,6 +113,7 @@ export const {
   setCoverImageUrl,
   setLogoImage,
   setInvoiceNumber,
+  setInvoiceDate,
   setBillAddressData,
   setAddItemsData,
   setEditItemsData,
