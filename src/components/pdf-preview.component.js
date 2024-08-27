@@ -50,6 +50,7 @@ export default function PDFPreview() {
   const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
   const billAddressData = useSelector((state) => state.invoice.billAddressData);
   const itemsData = useSelector((state) => state.invoice.itemsData);
+  const memo = useSelector((state) => state.invoice.memo);
 
   const InvoiceTitle = () => (
     <View style={styles.titleContainer}>
@@ -276,9 +277,11 @@ export default function PDFPreview() {
             <Typography style={{ fontSize: 10, color: "gray" }}>
               Memo:
             </Typography>
-            <Typography style={{ fontSize: 10 }}>
-              Thank you for your business!
-            </Typography>
+            <Box width={"20ch"}>
+              <Typography style={{ fontSize: 10, wordWrap: "break-word" }}>
+                {memo}
+              </Typography>
+            </Box>
           </Box>
         </Box>
       </Box>

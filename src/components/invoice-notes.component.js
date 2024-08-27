@@ -1,6 +1,13 @@
 import { Box, TextField, Typography } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { setMemo } from "../store/invoiceSlice";
 
 export default function NotesSection() {
+  const memo = useSelector((state) => state.invoice.memo);
+  const dispatch = useDispatch();
+  const handleMemoChange = (event) => {
+    dispatch(setMemo(event.target.value));
+  };
   return (
     <>
       <Box
@@ -12,7 +19,9 @@ export default function NotesSection() {
         mb={1}
       >
         <Typography>Other notes and instructions</Typography>
-        <Typography>*Optional</Typography>
+        <Typography style={{ fontSize: 14, color: "gray" }}>
+          *Optional
+        </Typography>
       </Box>
       <Box
         component="form"
@@ -25,7 +34,8 @@ export default function NotesSection() {
         <TextField
           multiline={true}
           rows={5}
-          defaultValue={"Thank you for your business!"}
+          defaultValue={memo}
+          onChange={(event) => handleMemoChange(event)}
         ></TextField>
       </Box>
     </>

@@ -36,6 +36,9 @@ export const invoiceSlice = createSlice({
         label: "Estimate",
       },
     ],
+    coverImageUrl:
+      "http://localhost:8080/files/jr-korpa-jrOJ35Rtkz0-unsplash.jpg",
+    logoImage: "",
     selectedInvoiceType: { value: 1, label: "Invoice" },
     invoiceDate: new Date().toDateString(),
     invoiceNumber: "001",
@@ -51,10 +54,7 @@ export const invoiceSlice = createSlice({
       },
     ],
     bankingDetails: "",
-
-    coverImageUrl:
-      "http://localhost:8080/files/jr-korpa-jrOJ35Rtkz0-unsplash.jpg",
-    logoImage: "",
+    memo: "Thank you for your business!",
   },
 
   reducers: {
@@ -106,6 +106,9 @@ export const invoiceSlice = createSlice({
     setBankingDetails: (state, action) => {
       state.bankingDetails = action.payload;
     },
+    setMemo: (state, action) => {
+      state.memo = action.payload;
+    },
   },
 });
 
@@ -113,12 +116,13 @@ export const {
   setCoverImageUrl,
   setLogoImage,
   setInvoiceNumber,
+  setSelectedInvoiceType,
   setInvoiceDate,
   setBillAddressData,
   setAddItemsData,
   setEditItemsData,
   setDeleteItemsData,
   setBankingDetails,
-  setSelectedInvoiceType,
+  setMemo,
 } = invoiceSlice.actions;
 export default invoiceSlice.reducer;
