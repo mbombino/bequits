@@ -157,22 +157,37 @@ export default function PDFPreview() {
             {itemsData.length > 0 &&
               itemsData.map((item) => (
                 <Box key={item.itemNumber}>
-                  <Box
+                  <Grid
+                    container
                     key={item.itemNumber}
-                    display={"flex"}
-                    justifyContent={"space-between"}
                     style={{ marginTop: 4, marginBottom: 4 }}
                   >
-                    <Typography style={{ fontSize: 10 }}>
-                      {item.itemDescription}
-                    </Typography>
-                    <Typography style={{ fontSize: 10 }}>
-                      {item.itemQuantity}
-                    </Typography>
-                    <Typography style={{ fontSize: 10 }}>
-                      {item.itemRate}
-                    </Typography>
-                  </Box>
+                    <Grid item lg={6} width={"20ch"}>
+                      <Typography
+                        style={{ fontSize: 10, wordWrap: "break-word" }}
+                      >
+                        {item.itemDescription}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={3}>
+                      <Typography
+                        style={{ fontSize: 10, wordWrap: "break-word" }}
+                      >
+                        {item.itemQuantity}
+                      </Typography>
+                    </Grid>
+                    <Grid item lg={3}>
+                      <Typography
+                        style={{
+                          fontSize: 10,
+                          wordWrap: "break-word",
+                          direction: "rtl",
+                        }}
+                      >
+                        {item.itemRate}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                   <Divider />
                 </Box>
               ))}
