@@ -121,14 +121,28 @@ export default function PDFPreview() {
               )}
             </Box>
           </Box>
-          <Box mt={2} display={"flex"} gap={"50%"}>
-            <Typography style={{ fontSize: 10 }}>
-              From:{billAddressData.fromAddress}
-            </Typography>
-            <Typography style={{ fontSize: 10 }}>
-              Bill To:{billAddressData.toAddress}
-            </Typography>
-          </Box>
+          <Grid container mt={2}>
+            <Grid item lg={6}>
+              <Typography style={{ fontSize: 10, color: "gray" }}>
+                From:
+              </Typography>
+              <Box width={"18ch"}>
+                <Typography style={{ fontSize: 10, wordWrap: "break-word" }}>
+                  {billAddressData.fromAddress}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item lg={6}>
+              <Typography style={{ fontSize: 10, color: "gray" }}>
+                Bill To:
+              </Typography>
+              <Box width={"18ch"}>
+                <Typography style={{ fontSize: 10, wordWrap: "break-word" }}>
+                  {billAddressData.toAddress}
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
           <Box mt={3}>
             <Box
               display={"flex"}
@@ -241,10 +255,12 @@ export default function PDFPreview() {
             >
               Balance Due:
             </Typography>
-            <Typography style={{ fontSize: 10 }}>0.00</Typography>
+            <Typography style={{ fontSize: 13 }}>0.00</Typography>
           </Box>
           <Box>
-            <Typography style={{ fontSize: 10 }}>Memo:</Typography>
+            <Typography style={{ fontSize: 10, color: "gray" }}>
+              Memo:
+            </Typography>
             <Typography style={{ fontSize: 10 }}>
               Thank you for your business!
             </Typography>

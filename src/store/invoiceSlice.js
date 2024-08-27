@@ -37,7 +37,7 @@ export const invoiceSlice = createSlice({
       },
     ],
     selectedInvoiceType: { value: 1, label: "Invoice" },
-    invoiceDate: new Date(),
+    invoiceDate: new Date().toDateString(),
     invoiceNumber: "001",
     billAddressData: { fromAddress: "", toAddress: "" },
     itemsData: [

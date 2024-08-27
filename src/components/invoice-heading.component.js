@@ -58,7 +58,7 @@ export default function HeadingSection() {
             (event.$d.getMonth() + 1) +
             "/" +
             event.$d.getDate()
-        )
+        ).toDateString()
       )
     );
   };
