@@ -21,6 +21,7 @@ import {
   setDeleteItemsData,
   setEditItemsData,
   setAddItemsData,
+  setSubtotal,
 } from "../store/invoiceSlice";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -143,21 +144,29 @@ export default function ItemsSections() {
       input.value = parseFloat(newValue);
     }
 
-    let textFieldPrefix = undefined;
+    let textFieldPrefix = "";
     if (event.target.value !== "") {
       textFieldPrefix = selectedCurrencyType.label[5];
+      const itemToEdit = {
+        itemNumber: item.itemNumber,
+        itemDescription: item.itemDescription,
+        itemQuantity: item.itemQuantity,
+        itemRatePrefix: textFieldPrefix,
+        itemRate: event.target.value,
+        itemTax: item.itemTax,
+      };
+      dispatch(setEditItemsData(itemToEdit));
+    } else {
+      const itemToEdit = {
+        itemNumber: item.itemNumber,
+        itemDescription: item.itemDescription,
+        itemQuantity: item.itemQuantity,
+        itemRatePrefix: textFieldPrefix,
+        itemRate: 0,
+        itemTax: item.itemTax,
+      };
+      dispatch(setEditItemsData(itemToEdit));
     }
-
-    const itemToEdit = {
-      itemNumber: item.itemNumber,
-      itemDescription: item.itemDescription,
-      itemQuantity: item.itemQuantity,
-
-      itemRatePrefix: textFieldPrefix,
-      itemRate: event.target.value,
-      itemTax: item.itemTax,
-    };
-    dispatch(setEditItemsData(itemToEdit));
   };
   const handleEditItemTax = (event, { item }) => {
     const itemToEdit = {

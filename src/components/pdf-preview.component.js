@@ -53,7 +53,13 @@ export default function PDFPreview() {
   const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
   const billAddressData = useSelector((state) => state.invoice.billAddressData);
   const itemsData = useSelector((state) => state.invoice.itemsData);
+  const subtotal = useSelector((state) => state.invoice.subtotal);
   const memo = useSelector((state) => state.invoice.memo);
+
+  const invoiceSubtotal = itemsData.reduce(
+    (total, item) => total + item.itemQuantity * item.itemRate,
+    subtotal
+  );
 
   const InvoiceTitle = () => (
     <View style={styles.titleContainer}>
@@ -211,7 +217,10 @@ export default function PDFPreview() {
             >
               Subtotal:
             </Typography>
-            <Typography style={{ fontSize: 10 }}>0.00</Typography>
+            <Typography style={{ fontSize: 10 }}>
+              {selectedCurrencyType.label[5]}
+              {parseFloat(invoiceSubtotal).toFixed(2)}
+            </Typography>
           </Box>
           <Box>
             <Divider style={{ marginLeft: "50%", width: "50%" }} />

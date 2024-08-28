@@ -50,10 +50,11 @@ export const invoiceSlice = createSlice({
         itemDescription: "",
         itemQuantity: 1,
         itemRate: 0,
-        itemRatePrefix: undefined,
+        itemRatePrefix: "",
         itemTax: 8,
       },
     ],
+    subtotal: 0,
     bankingDetails: "",
     memo: "Thank you for your business!",
   },
@@ -107,6 +108,9 @@ export const invoiceSlice = createSlice({
 
       state.itemsData.splice(state.itemsData.indexOf(itemToDelete), 1);
     },
+    setSubtotal: (state, action) => {
+      state.subtotal = action.payload;
+    },
     setBankingDetails: (state, action) => {
       state.bankingDetails = action.payload;
     },
@@ -127,6 +131,7 @@ export const {
   setAddItemsData,
   setEditItemsData,
   setDeleteItemsData,
+  setSubtotal,
   setBankingDetails,
   setMemo,
 } = invoiceSlice.actions;
