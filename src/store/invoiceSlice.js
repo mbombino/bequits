@@ -39,6 +39,7 @@ export const invoiceSlice = createSlice({
     coverImageUrl:
       "http://localhost:8080/files/jr-korpa-jrOJ35Rtkz0-unsplash.jpg",
     logoImage: "",
+    selectedCurrencyType: { value: "ZAR", label: "ZAR (R)" },
     selectedInvoiceType: { value: 1, label: "Invoice" },
     invoiceDate: new Date().toDateString(),
     invoiceNumber: "001",
@@ -66,6 +67,9 @@ export const invoiceSlice = createSlice({
     },
     setCurrencyTypes: (state, action) => {
       state.currencyTypes.push(action.payload);
+    },
+    setSelectedCurrencyType: (state, action) => {
+      state.selectedCurrencyType = action.payload;
     },
     setInvoiceTypes: (state, action) => {
       state.currencyTypes.push(action.payload);
@@ -115,9 +119,10 @@ export const invoiceSlice = createSlice({
 export const {
   setCoverImageUrl,
   setLogoImage,
-  setInvoiceNumber,
+  setSelectedCurrencyType,
   setSelectedInvoiceType,
   setInvoiceDate,
+  setInvoiceNumber,
   setBillAddressData,
   setAddItemsData,
   setEditItemsData,

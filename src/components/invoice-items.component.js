@@ -26,6 +26,9 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 export default function ItemsSections() {
   const [anchorEl, setAnchorEl] = useState(null);
+  const selectedCurrencyType = useSelector(
+    (state) => state.invoice.selectedCurrencyType
+  );
   const itemsData = useSelector((state) => state.invoice.itemsData);
   const dispatch = useDispatch();
   const open = Boolean(anchorEl);
@@ -142,7 +145,7 @@ export default function ItemsSections() {
 
     let textFieldPrefix = undefined;
     if (event.target.value !== "") {
-      textFieldPrefix = "R";
+      textFieldPrefix = selectedCurrencyType.label[5];
     }
 
     const itemToEdit = {

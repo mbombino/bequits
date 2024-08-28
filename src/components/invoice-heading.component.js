@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   setSelectedInvoiceType,
   setInvoiceDate,
+  setSelectedCurrencyType,
   setInvoiceNumber,
   setBillAddressData,
 } from "../store/invoiceSlice";
@@ -25,6 +26,13 @@ export default function HeadingSection() {
   const billAddressData = useSelector((state) => state.invoice.billAddressData);
   const dispatch = useDispatch();
   const defaultDate = new Date(invoiceDate);
+
+  const handleCurrencyTypeSelection = (event) => {
+    const currencyType = currencyTypes.find(
+      (e) => e.value === event.target.value
+    );
+    dispatch(setSelectedCurrencyType(currencyType));
+  };
 
   const handleInvoiceTypeSelection = (event) => {
     const invoiceType = invoiceTypes.find(
@@ -79,7 +87,13 @@ export default function HeadingSection() {
           noValidate
           autoComplete="off"
         >
-          <TextField variant="outlined" select defaultValue="ZAR" size="small">
+          <TextField
+            variant="outlined"
+            select
+            defaultValue="ZAR"
+            size="small"
+            onChange={(event) => handleCurrencyTypeSelection(event)}
+          >
             {currencyTypes.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}

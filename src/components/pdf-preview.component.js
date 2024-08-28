@@ -43,6 +43,9 @@ export default function PDFPreview() {
   const [defaultCoverImage, setDefaultCoverImage] = useState();
   const coverImageUrl = useSelector((state) => state.invoice.coverImageUrl);
   const logoImage = useSelector((state) => state.invoice.logoImage);
+  const selectedCurrencyType = useSelector(
+    (state) => state.invoice.selectedCurrencyType
+  );
   const selectedInvoiceType = useSelector(
     (state) => state.invoice.selectedInvoiceType
   );
@@ -185,7 +188,8 @@ export default function PDFPreview() {
                           direction: "rtl",
                         }}
                       >
-                        {item.itemRate}
+                        {selectedCurrencyType.label[5]}
+                        {parseFloat(item.itemRate).toFixed(2)}
                       </Typography>
                     </Grid>
                   </Grid>
