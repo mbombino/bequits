@@ -47,8 +47,29 @@ export default function ItemsSections() {
   };
   const [checked, setChecked] = React.useState(false);
 
-  const handleChange = (event) => {
+  const handleChange = (event, { item }) => {
     setChecked(event.target.checked);
+    if (event.target.checked) {
+      const itemToEdit = {
+        itemNumber: item.itemNumber,
+        itemDescription: item.itemDescription,
+        itemQuantity: item.itemQuantity,
+        itemRate: item.itemRate,
+        itemTax: 8,
+        itemTaxAmount: item.taxAmount,
+      };
+      dispatch(setEditItemsData(itemToEdit));
+    } else {
+      const itemToEdit = {
+        itemNumber: item.itemNumber,
+        itemDescription: item.itemDescription,
+        itemQuantity: item.itemQuantity,
+        itemRate: item.itemRate,
+        itemTax: 0,
+        itemTaxAmount: item.taxAmount,
+      };
+      dispatch(setEditItemsData(itemToEdit));
+    }
   };
 
   const handleCheckQuantityDigit = (event, { item }) => {
@@ -95,6 +116,32 @@ export default function ItemsSections() {
       event.preventDefault();
     }
   };
+  const handleCheckTaxDigit = (event, { item }) => {
+    let input = document.getElementById(item.itemNumber + ".tax-input");
+    const cursorPosition = input.selectionStart;
+
+    if (
+      (((event.keyCode < 48 && !arrowKeyCodes.includes(event.keyCode)) ||
+        (event.keyCode > 57 && !numPadKeyCodes.includes(event.keyCode))) &&
+        !(
+          event.keyCode === floatingKeyCode ||
+          event.keyCode === backspaceKeyCode
+        )) ||
+      (input.value.split(".")[1]?.length + 1 > 2 &&
+        !(
+          event.keyCode === backspaceKeyCode ||
+          arrowKeyCodes.includes(event.keyCode)
+        ) &&
+        cursorPosition > input.value.split(".")[0]?.length) ||
+      (cursorPosition === 0 && Number(event.key) === 0 && input.value !== "") ||
+      (input.value.includes(".") && event.key === ".") ||
+      (Number(input.value[0]) === 0 &&
+        Number(event.key) === 0 &&
+        !input.value.includes("."))
+    ) {
+      event.preventDefault();
+    }
+  };
 
   const handleAddItem = () => {
     const uid = Date.now().toString(32) + Math.random().toString(16);
@@ -103,7 +150,8 @@ export default function ItemsSections() {
       itemDescription: "",
       itemQuantity: 1,
       itemRate: 0,
-      itemTax: 8,
+      itemTax: 0,
+      itemTaxAmount: 0,
     };
 
     dispatch(setAddItemsData(itemToAdd));
@@ -117,6 +165,7 @@ export default function ItemsSections() {
       itemRatePrefix: item.itemRatePrefix,
       itemRate: item.itemRate,
       itemTax: item.itemTax,
+      itemTaxAmount: item.itemTaxAmount,
     };
 
     dispatch(setEditItemsData(itemToEdit));
@@ -129,6 +178,7 @@ export default function ItemsSections() {
       itemRatePrefix: item.itemRatePrefix,
       itemRate: item.itemRate,
       itemTax: item.itemTax,
+      itemTaxAmount: item.itemTaxAmount,
     };
     dispatch(setEditItemsData(itemToEdit));
   };
@@ -154,6 +204,7 @@ export default function ItemsSections() {
         itemRatePrefix: textFieldPrefix,
         itemRate: event.target.value,
         itemTax: item.itemTax,
+        itemTaxAmount: item.itemTaxAmount,
       };
       dispatch(setEditItemsData(itemToEdit));
     } else {
@@ -164,19 +215,45 @@ export default function ItemsSections() {
         itemRatePrefix: textFieldPrefix,
         itemRate: 0,
         itemTax: item.itemTax,
+        itemTaxAmount: item.itemTaxAmount,
       };
       dispatch(setEditItemsData(itemToEdit));
     }
   };
   const handleEditItemTax = (event, { item }) => {
-    const itemToEdit = {
-      itemNumber: item.itemNumber,
-      itemDescription: item.itemDescription,
-      itemQuantity: item.itemQuantity,
-      itemRate: item.itemRate,
-      itemTax: event.target.value,
-    };
-    dispatch(setEditItemsData(itemToEdit));
+    let input = document.getElementById(item.itemNumber + ".tax-input");
+    const cursorPosition = input.selectionStart;
+    let taxAmount = 0;
+    if (
+      (cursorPosition === 0 && input.value.length > 2) ||
+      (cursorPosition === 1 && input.value.length > 2) ||
+      (input.value[1] > 0 && input.value.length === 2)
+    ) {
+      let newValue = input.value.replace(/^0+/, "");
+      input.value = parseFloat(newValue);
+    }
+    if (event.target.value !== "") {
+      taxAmount = parseFloat(event.target.value * (event.target.value / 100));
+      const itemToEdit = {
+        itemNumber: item.itemNumber,
+        itemDescription: item.itemDescription,
+        itemQuantity: item.itemQuantity,
+        itemRate: item.itemRate,
+        itemTax: event.target.value,
+        itemTaxAmount: taxAmount,
+      };
+      dispatch(setEditItemsData(itemToEdit));
+    } else {
+      const itemToEdit = {
+        itemNumber: item.itemNumber,
+        itemDescription: item.itemDescription,
+        itemQuantity: item.itemQuantity,
+        itemRate: item.itemRate,
+        itemTax: 0,
+        itemTaxAmount: taxAmount,
+      };
+      dispatch(setEditItemsData(itemToEdit));
+    }
   };
   return (
     <Box>
@@ -302,7 +379,7 @@ export default function ItemsSections() {
                     <Typography mt={1}>Taxable</Typography>
                     <Switch
                       checked={checked}
-                      onChange={handleChange}
+                      onChange={(event) => handleChange(event, { item })}
                       inputProps={{ "aria-label": "controlled" }}
                     />
                   </Box>
@@ -310,8 +387,12 @@ export default function ItemsSections() {
                 {checked ? (
                   <MenuItem>
                     <TextField
+                      id={item.itemNumber + ".tax-input"}
                       size="small"
                       defaultValue={item.itemTax}
+                      onKeyDown={(event) =>
+                        handleCheckTaxDigit(event, { item })
+                      }
                       onChange={(event) => handleEditItemTax(event, { item })}
                       InputProps={{
                         endAdornment: (

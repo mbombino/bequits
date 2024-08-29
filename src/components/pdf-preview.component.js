@@ -58,8 +58,17 @@ export default function PDFPreview() {
 
   const invoiceSubtotal = itemsData.reduce(
     (total, item) => total + item.itemQuantity * item.itemRate,
-    subtotal
+    0
   );
+
+  const invoiceTax = itemsData.reduce(
+    (total, item) =>
+      total + item.itemQuantity * item.itemRate * (item.itemTax / 100),
+    0
+  );
+
+  const invoiceTotal = invoiceSubtotal + invoiceTax;
+  //const invoiceBalanceDue = invoiceTotal-invoiceDiscount
 
   const InvoiceTitle = () => (
     <View style={styles.titleContainer}>
@@ -217,10 +226,17 @@ export default function PDFPreview() {
             >
               Subtotal:
             </Typography>
-            <Typography style={{ fontSize: 10 }}>
-              {selectedCurrencyType.label[5]}
-              {parseFloat(invoiceSubtotal).toFixed(2)}
-            </Typography>
+            <Box>
+              <Typography
+                style={{
+                  fontSize: 10,
+                  //wordWrap: "break-word",
+                }}
+              >
+                {selectedCurrencyType.label[5]}
+                {parseFloat(invoiceSubtotal).toFixed(2)}
+              </Typography>
+            </Box>
           </Box>
           <Box>
             <Divider style={{ marginLeft: "50%", width: "50%" }} />
@@ -233,7 +249,10 @@ export default function PDFPreview() {
             justifyContent={"space-between"}
           >
             <Typography style={{ fontSize: 10 }}>Tax:</Typography>
-            <Typography style={{ fontSize: 10 }}>0.00</Typography>
+            <Typography style={{ fontSize: 10 }}>
+              {selectedCurrencyType.label[5]}
+              {parseFloat(invoiceTax).toFixed(2)}
+            </Typography>
           </Box>
           <Divider style={{ marginLeft: "50%", width: "50%" }} />
           <Box
@@ -250,7 +269,10 @@ export default function PDFPreview() {
             >
               Total:
             </Typography>
-            <Typography style={{ fontSize: 10 }}>0.00</Typography>
+            <Typography style={{ fontSize: 10 }}>
+              {selectedCurrencyType.label[5]}
+              {parseFloat(invoiceTotal).toFixed(2)}
+            </Typography>
           </Box>
           <Divider style={{ marginLeft: "50%", width: "50%" }} />
           <Box
