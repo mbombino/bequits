@@ -25,12 +25,19 @@ import {
   SettingsOutlined,
 } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
-import { setBankingDetails } from "../store/invoiceSlice";
+import {
+  setBankingDetails,
+  setDiscount,
+  setSelectedDiscountType,
+} from "../store/invoiceSlice";
 
 export default function PaymentSection() {
+  const selectedDiscountType = useSelector(
+    (state) => state.invoice.selectedDiscountType
+  );
   const [checked, setChecked] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("percent");
+  const [value, setValue] = React.useState(selectedDiscountType);
   const [discountHidden, setDiscountHidden] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [contractChecked, setContractChecked] = React.useState(false);
@@ -47,6 +54,7 @@ export default function PaymentSection() {
   const openExtras = Boolean(anchorEl);
 
   const bankingDetails = useSelector((state) => state.invoice.bankingDetails);
+  const discount = useSelector((state) => state.invoice.discount);
   const dispatch = useDispatch();
 
   const handleTooltipClose = () => {
@@ -81,6 +89,11 @@ export default function PaymentSection() {
   };
   const handleFixedDepositChange = (event) => {
     setValue(event.target.value);
+    if (event.target.value === "percent") {
+      dispatch(setSelectedDiscountType("percent"));
+    } else {
+      dispatch(setSelectedDiscountType("fixed"));
+    }
   };
 
   const handlePaymentExtrasOpen = (event) => {
@@ -116,6 +129,14 @@ export default function PaymentSection() {
       event.preventDefault();
     }
   };
+  const handlePercentDiscountChange = (event) => {
+    dispatch(setDiscount(event.target.value));
+    dispatch(setSelectedDiscountType("percent"));
+  };
+  const handleFixedDiscountChange = (event) => {
+    dispatch(setDiscount(event.target.value));
+    dispatch(setSelectedDiscountType("fixed"));
+  };
   return (
     <Box>
       <Box m={5} display={"flex"} justifyContent={"space-between"}>
@@ -144,6 +165,7 @@ export default function PaymentSection() {
             <Box>
               <MenuItem
                 onClick={() => {
+                  dispatch(setDiscount(25));
                   setDiscountHidden(false);
                   handlePaymentExtrasClose();
                 }}
@@ -274,6 +296,7 @@ export default function PaymentSection() {
               row
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
+              //onKeyDown={(event) => handleCheckFixedDiscountDigit(event)}
               value={value}
               onChange={handleFixedDepositChange}
             >
@@ -300,9 +323,9 @@ export default function PaymentSection() {
                 <TextField
                   id="discount-input"
                   size="small"
-                  defaultValue={25}
+                  defaultValue={discount}
                   onKeyDown={(event) => handleCheckDiscountDigit(event)}
-                  //onChange={(event) => handleCheckRateDigit(event, { item })}
+                  onChange={(event) => handlePercentDiscountChange(event)}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">%</InputAdornment>
@@ -313,9 +336,9 @@ export default function PaymentSection() {
                 <TextField
                   id="discount-input"
                   size="small"
-                  defaultValue={25}
+                  defaultValue={discount}
                   onKeyDown={(event) => handleCheckDiscountDigit(event)}
-                  //onChange={(event) => handleEditItemRate(event, { item })}
+                  onChange={(event) => handleFixedDiscountChange(event)}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">R</InputAdornment>
@@ -327,6 +350,7 @@ export default function PaymentSection() {
             <IconButton
               style={{ borderRadius: 10 }}
               onClick={() => {
+                dispatch(setDiscount(0));
                 setDiscountHidden(true);
               }}
             >

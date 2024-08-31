@@ -52,10 +52,14 @@ export const invoiceSlice = createSlice({
         itemRate: 0,
         itemRatePrefix: "",
         itemTax: 0,
-        itemTaxAmount: 0,
       },
     ],
     subtotal: 0,
+    tax: 0,
+    total: 0,
+    discount: 0,
+    selectedDiscountType: "percent",
+    balanceDue: 0,
     bankingDetails: "",
     memo: "Thank you for your business!",
   },
@@ -112,6 +116,12 @@ export const invoiceSlice = createSlice({
     setSubtotal: (state, action) => {
       state.subtotal = action.payload;
     },
+    setDiscount: (state, action) => {
+      state.discount = action.payload;
+    },
+    setSelectedDiscountType: (state, action) => {
+      state.selectedDiscountType = action.payload;
+    },
     setBankingDetails: (state, action) => {
       state.bankingDetails = action.payload;
     },
@@ -133,6 +143,8 @@ export const {
   setEditItemsData,
   setDeleteItemsData,
   setSubtotal,
+  setDiscount,
+  setSelectedDiscountType,
   setBankingDetails,
   setMemo,
 } = invoiceSlice.actions;

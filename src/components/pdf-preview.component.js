@@ -54,6 +54,10 @@ export default function PDFPreview() {
   const billAddressData = useSelector((state) => state.invoice.billAddressData);
   const itemsData = useSelector((state) => state.invoice.itemsData);
   const subtotal = useSelector((state) => state.invoice.subtotal);
+  const discount = useSelector((state) => state.invoice.discount);
+  const selectedDiscountType = useSelector(
+    (state) => state.invoice.selectedDiscountType
+  );
   const memo = useSelector((state) => state.invoice.memo);
 
   const invoiceSubtotal = itemsData.reduce(
@@ -68,6 +72,15 @@ export default function PDFPreview() {
   );
 
   const invoiceTotal = invoiceSubtotal + invoiceTax;
+
+  let invoiceDiscount = 0;
+
+  if (selectedDiscountType === "percent") {
+    invoiceDiscount = invoiceTotal * (discount / 100);
+  } else {
+    invoiceDiscount = discount;
+  }
+  //const invoiceDiscount=invoiceTotal*(discount/100);
   //const invoiceBalanceDue = invoiceTotal-invoiceDiscount
 
   const InvoiceTitle = () => (
@@ -275,23 +288,34 @@ export default function PDFPreview() {
             </Typography>
           </Box>
           <Divider style={{ marginLeft: "50%", width: "50%" }} />
-          <Box
-            display={"flex"}
-            mt={0.5}
-            mb={0.5}
-            ml={"50%"}
-            justifyContent={"space-between"}
-          >
-            <Typography
-              style={{
-                fontSize: 10,
-              }}
-            >
-              Discount:
-            </Typography>
-            <Typography style={{ fontSize: 10 }}>0.00</Typography>
-          </Box>
-          <Divider style={{ marginLeft: "50%", width: "50%" }} />
+          {discount == 0 ? (
+            <></>
+          ) : (
+            <>
+              <Box
+                display={"flex"}
+                mt={0.5}
+                mb={0.5}
+                ml={"50%"}
+                justifyContent={"space-between"}
+              >
+                <Typography
+                  style={{
+                    fontSize: 10,
+                  }}
+                >
+                  Discount:
+                </Typography>
+
+                <Typography style={{ fontSize: 10 }}>
+                  {selectedCurrencyType.label[5]}
+                  {parseFloat(invoiceDiscount).toFixed(2)}
+                </Typography>
+              </Box>
+              <Divider style={{ marginLeft: "50%", width: "50%" }} />
+            </>
+          )}
+
           <Box
             display={"flex"}
             mt={0.5}
