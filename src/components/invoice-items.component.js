@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import {
   Add,
   Delete,
@@ -16,6 +16,8 @@ import {
   Switch,
   InputAdornment,
   Divider,
+  Paper,
+  MenuList,
 } from "@mui/material";
 import {
   setDeleteItemsData,
@@ -26,24 +28,26 @@ import {
 
 import { useSelector, useDispatch } from "react-redux";
 export default function ItemsSections() {
-  const [itemOption, setItemOption] = useState(null);
+  const [menu, setMenu] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const selectedCurrencyType = useSelector(
     (state) => state.invoice.selectedCurrencyType
   );
   const itemsData = useSelector((state) => state.invoice.itemsData);
   const dispatch = useDispatch();
-  const open = Boolean(itemOption);
 
   const arrowKeyCodes = [37, 38, 39, 40];
   const numPadKeyCodes = [96, 97, 98, 99, 100, 101, 102, 103, 104, 105];
   const floatingKeyCode = 190;
   const backspaceKeyCode = 8;
 
-  const handleClick = (event) => {
-    setItemOption(event.currentTarget);
+  const handleClick = (index) => (event) => {
+    setMenu(event.currentTarget);
+    setCurrentIndex(index);
   };
   const handleClose = () => {
-    setItemOption(null);
+    setMenu(null);
   };
 
   const stuff = {};
@@ -51,19 +55,14 @@ export default function ItemsSections() {
 
   const [checked, setChecked] = useState(stuff);
 
-  const handleChange = (event, itemNumber) => {
-    setChecked({
-      ...checked,
-      [event.target.name]: event.target.checked,
-    });
-    const item = itemsData.find((e) => e.itemNumber === itemNumber);
-
+  const handleChange = (event, { item }) => {
     if (event.target.checked) {
       const itemToEdit = {
         itemNumber: item.itemNumber,
         itemDescription: item.itemDescription,
         itemQuantity: item.itemQuantity,
         itemRate: item.itemRate,
+        itemRatePrefix: item.itemRatePrefix,
         itemTax: 8,
       };
       dispatch(setEditItemsData(itemToEdit));
@@ -73,10 +72,15 @@ export default function ItemsSections() {
         itemDescription: item.itemDescription,
         itemQuantity: item.itemQuantity,
         itemRate: item.itemRate,
+        itemRatePrefix: item.itemRatePrefix,
         itemTax: 0,
       };
       dispatch(setEditItemsData(itemToEdit));
     }
+    setChecked({
+      ...checked,
+      [event.target.name]: event.target.checked,
+    });
   };
 
   const handleCheckQuantityDigit = (event, { item }) => {
@@ -157,6 +161,7 @@ export default function ItemsSections() {
       itemDescription: "",
       itemQuantity: 1,
       itemRate: 0,
+      itemRatePrefix: "",
       itemTax: 0,
     };
 
@@ -240,6 +245,7 @@ export default function ItemsSections() {
         itemDescription: item.itemDescription,
         itemQuantity: item.itemQuantity,
         itemRate: item.itemRate,
+        itemRatePrefix: item.itemRatePrefix,
         itemTax: event.target.value,
       };
       dispatch(setEditItemsData(itemToEdit));
@@ -249,6 +255,7 @@ export default function ItemsSections() {
         itemDescription: item.itemDescription,
         itemQuantity: item.itemQuantity,
         itemRate: item.itemRate,
+        itemRatePrefix: item.itemRatePrefix,
         itemTax: 0,
       };
       dispatch(setEditItemsData(itemToEdit));
@@ -269,147 +276,115 @@ export default function ItemsSections() {
         <Typography>Qty</Typography>
         <Typography>Rate</Typography>
       </Box>
-      {itemsData.length > 0 &&
-        itemsData.map((item) => {
-          return (
-            <Box display={"flex"} key={item.itemNumber}>
-              <Box
-                component="form"
-                sx={{
-                  "& .MuiTextField-root": { ml: 5, mt: 2, width: "20ch" },
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <TextField
-                  rows={1}
-                  multiline={true}
-                  placeholder={"Description of service or product"}
-                  onChange={(event) =>
-                    handleEditItemDescription(event, { item })
-                  }
-                ></TextField>
-              </Box>
-              <Box
-                component="form"
-                sx={{
-                  "& .MuiTextField-root": { ml: 1, mt: 2, width: "8ch" },
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <TextField
-                  id={item.itemNumber + ".qty-input"}
-                  onKeyDown={(event) =>
-                    handleCheckQuantityDigit(event, { item })
-                  }
-                  defaultValue={item.itemQuantity}
-                  onChange={(event) => handleEditItemQuantity(event, { item })}
-                ></TextField>
-              </Box>
-              <Box
-                component="form"
-                sx={{
-                  "& .MuiTextField-root": { ml: 1, mt: 2, width: "14ch" },
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <TextField
-                  id={item.itemNumber + ".rate-input"}
-                  onKeyDown={(event) => handleCheckRateDigit(event, { item })}
-                  defaultValue={item.itemRate}
-                  onChange={(event) => handleEditItemRate(event, { item })}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        {item.itemRatePrefix}
-                      </InputAdornment>
-                    ),
-                  }}
-                ></TextField>
-              </Box>
-              <Box mt={3} ml={1}>
-                <IconButton
-                  id={item.itemNumber}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  size="small"
-                  style={{
-                    borderRadius: 10,
-                  }}
-                  onClick={handleClick}
-                >
-                  <MoreHorizRounded />
-                </IconButton>
 
-                <Menu
-                  id={item.itemNumber + ".menu"}
-                  anchorEl={itemOption}
-                  open={open}
-                  onClose={handleClose}
-                  sx={{ width: 200 }}
-                >
-                  <MenuItem
-                    onClick={() => {
-                      dispatch(setDeleteItemsData(itemOption.id));
-                      handleClose();
-                    }}
-                  >
-                    <Box
-                      display={"flex"}
-                      justifyContent={"space-between"}
-                      width={200}
-                    >
-                      <Typography mt={1}>Delete</Typography>
-                      <IconButton size="small">
-                        <Delete />
-                      </IconButton>
-                    </Box>
-                  </MenuItem>
-                  <Divider />
-                  <MenuItem>
-                    <Box
-                      display={"flex"}
-                      justifyContent={"space-between"}
-                      width={200}
-                    >
-                      <Typography mt={1}>Taxable</Typography>
-                      <Switch
-                        name={itemOption?.id}
-                        checked={checked[itemOption?.id] || false}
-                        onChange={(event) =>
-                          handleChange(event, itemOption?.id)
-                        }
-                        inputProps={{ "aria-label": "controlled" }}
-                      />
-                    </Box>
-                  </MenuItem>
-                  {checked[itemOption?.id] ? (
-                    <MenuItem>
-                      <TextField
-                        id={item.itemNumber + ".tax-input"}
-                        size="small"
-                        defaultValue={item.itemTax}
-                        onKeyDown={(event) =>
-                          handleCheckTaxDigit(event, { item })
-                        }
-                        onChange={(event) => handleEditItemTax(event, { item })}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">%</InputAdornment>
-                          ),
-                        }}
-                      />
-                    </MenuItem>
-                  ) : (
-                    <MenuItem sx={{ display: "none" }}></MenuItem>
-                  )}
-                </Menu>
-              </Box>
+      {itemsData.map((item, index) => {
+        return (
+          <Box display={"flex"} key={item.itemNumber}>
+            <Box
+              component="form"
+              sx={{
+                "& .MuiTextField-root": { ml: 5, mt: 2, width: "20ch" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                rows={1}
+                multiline={true}
+                placeholder={"Description of service or product"}
+                onChange={(event) => handleEditItemDescription(event, { item })}
+              ></TextField>
             </Box>
-          );
-        })}
+            <Box
+              component="form"
+              sx={{
+                "& .MuiTextField-root": { ml: 1, mt: 2, width: "8ch" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                id={item.itemNumber + ".qty-input"}
+                onKeyDown={(event) => handleCheckQuantityDigit(event, { item })}
+                defaultValue={item.itemQuantity}
+                onChange={(event) => handleEditItemQuantity(event, { item })}
+              ></TextField>
+            </Box>
+            <Box
+              component="form"
+              sx={{
+                "& .MuiTextField-root": { ml: 1, mt: 2, width: "14ch" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                id={item.itemNumber + ".rate-input"}
+                onKeyDown={(event) => handleCheckRateDigit(event, { item })}
+                defaultValue={item.itemRate}
+                onChange={(event) => {
+                  handleEditItemRate(event, { item });
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      {item.itemRatePrefix}
+                    </InputAdornment>
+                  ),
+                }}
+              ></TextField>
+            </Box>
+
+            <IconButton
+              size="small"
+              style={{
+                borderRadius: 10,
+              }}
+              onClick={handleClick(index)}
+            >
+              <MoreHorizRounded />
+            </IconButton>
+
+            <Menu
+              anchorEl={menu}
+              open={Boolean(menu) && index === currentIndex}
+              onClose={handleClose}
+              style={{ width: 200 }}
+            >
+              <MenuItem>
+                <Box display={"flex"} justifyContent={"space-between"}>
+                  <Typography mt={1}>Taxable</Typography>
+                  <Switch
+                    key={item.itemNumber}
+                    name={item.itemNumber}
+                    checked={checked[item.itemNumber] || false}
+                    onChange={(event) => handleChange(event, { item })}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                </Box>
+              </MenuItem>
+              {checked[item.itemNumber] ? (
+                <MenuItem>
+                  <TextField
+                    id={item.itemNumber + ".tax-input"}
+                    size="small"
+                    defaultValue={item.itemTax}
+                    onKeyDown={(event) => handleCheckTaxDigit(event, { item })}
+                    onChange={(event) => handleEditItemTax(event, { item })}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">%</InputAdornment>
+                      ),
+                    }}
+                  />
+                </MenuItem>
+              ) : (
+                <MenuItem sx={{ display: "none" }}></MenuItem>
+              )}
+            </Menu>
+          </Box>
+        );
+      })}
       <Box ml={5} mt={1}>
         <Button
           variant="outlined"

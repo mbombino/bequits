@@ -80,8 +80,8 @@ export default function PDFPreview() {
   } else {
     invoiceDiscount = discount;
   }
-  //const invoiceDiscount=invoiceTotal*(discount/100);
-  //const invoiceBalanceDue = invoiceTotal-invoiceDiscount
+
+  const invoiceBalanceDue = invoiceTotal - invoiceDiscount;
 
   const InvoiceTitle = () => (
     <View style={styles.titleContainer}>
@@ -243,7 +243,6 @@ export default function PDFPreview() {
               <Typography
                 style={{
                   fontSize: 10,
-                  //wordWrap: "break-word",
                 }}
               >
                 {selectedCurrencyType.label[5]}
@@ -288,7 +287,7 @@ export default function PDFPreview() {
             </Typography>
           </Box>
           <Divider style={{ marginLeft: "50%", width: "50%" }} />
-          {discount == 0 ? (
+          {discount === 0 ? (
             <></>
           ) : (
             <>
@@ -330,7 +329,10 @@ export default function PDFPreview() {
             >
               Balance Due:
             </Typography>
-            <Typography style={{ fontSize: 13 }}>0.00</Typography>
+            <Typography style={{ fontSize: 13 }}>
+              {selectedCurrencyType.label[5]}
+              {parseFloat(invoiceBalanceDue).toFixed(2)}
+            </Typography>
           </Box>
           <Box>
             <Typography style={{ fontSize: 10, color: "gray" }}>
