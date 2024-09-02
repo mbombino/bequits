@@ -177,7 +177,7 @@ export default function HeadingSection() {
             multiline={true}
             rows={2}
             placeholder={"Bill to: Enter name and address"}
-            onChange={(event) => handleFromBillAddressChange(event)}
+            onChange={(event) => handleToBillAddressChange(event)}
           ></TextField>
         </Box>
         <Box
@@ -193,7 +193,7 @@ export default function HeadingSection() {
             multiline={true}
             rows={2}
             placeholder={"From: Enter your name and address"}
-            onChange={(event) => handleToBillAddressChange(event)}
+            onChange={(event) => handleFromBillAddressChange(event)}
           ></TextField>
         </Box>
       </Box>

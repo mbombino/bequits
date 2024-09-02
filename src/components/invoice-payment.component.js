@@ -241,6 +241,7 @@ export default function PaymentSection() {
                 <TextField
                   size="small"
                   placeholder="Enter your bank details"
+                  multiline={true}
                   onChange={(event) => handleBankDetailsChange(event)}
                   inputProps={{ style: { color: "white" } }}
                   sx={{
@@ -279,7 +280,9 @@ export default function PaymentSection() {
                   label="Bank Transfer"
                 />
               </FormGroup>
-              <Typography>{bankingDetails}</Typography>
+              <Typography style={{ whiteSpace: "pre-line" }}>
+                {bankingDetails}
+              </Typography>
             </Box>
           </Tooltip>
         </div>

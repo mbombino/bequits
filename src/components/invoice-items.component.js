@@ -1,10 +1,5 @@
-import React, { Fragment, useState } from "react";
-import {
-  Add,
-  Delete,
-  DeleteForeverRounded,
-  MoreHorizRounded,
-} from "@mui/icons-material";
+import React, { useState } from "react";
+import { Add, Delete, MoreHorizRounded } from "@mui/icons-material";
 import {
   Box,
   IconButton,
@@ -15,15 +10,11 @@ import {
   Menu,
   Switch,
   InputAdornment,
-  Divider,
-  Paper,
-  MenuList,
 } from "@mui/material";
 import {
   setDeleteItemsData,
   setEditItemsData,
   setAddItemsData,
-  setSubtotal,
 } from "../store/invoiceSlice";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -334,25 +325,47 @@ export default function ItemsSections() {
                 }}
               ></TextField>
             </Box>
-
-            <IconButton
-              size="small"
-              style={{
-                borderRadius: 10,
-              }}
-              onClick={handleClick(index)}
-            >
-              <MoreHorizRounded />
-            </IconButton>
+            <Box ml={1} mt={3}>
+              <IconButton
+                size="small"
+                style={{
+                  borderRadius: 10,
+                }}
+                onClick={handleClick(index)}
+              >
+                <MoreHorizRounded />
+              </IconButton>
+            </Box>
 
             <Menu
               anchorEl={menu}
               open={Boolean(menu) && index === currentIndex}
               onClose={handleClose}
-              style={{ width: 200 }}
             >
-              <MenuItem>
-                <Box display={"flex"} justifyContent={"space-between"}>
+              <MenuItem
+                style={{ width: 150 }}
+                onClick={() => {
+                  dispatch(setDeleteItemsData({ item }));
+                  handleClose();
+                }}
+              >
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  width={150}
+                >
+                  <Typography mt={1}>Delete</Typography>
+                  <IconButton size="small">
+                    <Delete />
+                  </IconButton>
+                </Box>
+              </MenuItem>
+              <MenuItem style={{ width: 150 }}>
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  width={150}
+                >
                   <Typography mt={1}>Taxable</Typography>
                   <Switch
                     key={item.itemNumber}
@@ -364,7 +377,7 @@ export default function ItemsSections() {
                 </Box>
               </MenuItem>
               {checked[item.itemNumber] ? (
-                <MenuItem>
+                <MenuItem style={{ width: 150 }}>
                   <TextField
                     id={item.itemNumber + ".tax-input"}
                     size="small"

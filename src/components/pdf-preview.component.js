@@ -59,6 +59,7 @@ export default function PDFPreview() {
     (state) => state.invoice.selectedDiscountType
   );
   const memo = useSelector((state) => state.invoice.memo);
+  const bankingDetails = useSelector((state) => state.invoice.bankingDetails);
 
   const invoiceSubtotal = itemsData.reduce(
     (total, item) => total + item.itemQuantity * item.itemRate,
@@ -225,77 +226,32 @@ export default function PDFPreview() {
                 </Box>
               ))}
           </Box>
-          <Box
-            display={"flex"}
-            mt={0.5}
-            mb={0.5}
-            ml={"50%"}
-            justifyContent={"space-between"}
-          >
-            <Typography
-              style={{
-                fontSize: 10,
-              }}
-            >
-              Subtotal:
-            </Typography>
-            <Box>
-              <Typography
-                style={{
-                  fontSize: 10,
-                }}
-              >
-                {selectedCurrencyType.label[5]}
-                {parseFloat(invoiceSubtotal).toFixed(2)}
-              </Typography>
-            </Box>
-          </Box>
-          <Box>
-            <Divider style={{ marginLeft: "50%", width: "50%" }} />
-          </Box>
-          <Box
-            display={"flex"}
-            mt={0.5}
-            mb={0.5}
-            ml={"50%"}
-            justifyContent={"space-between"}
-          >
-            <Typography style={{ fontSize: 10 }}>Tax:</Typography>
-            <Typography style={{ fontSize: 10 }}>
-              {selectedCurrencyType.label[5]}
-              {parseFloat(invoiceTax).toFixed(2)}
-            </Typography>
-          </Box>
-          <Divider style={{ marginLeft: "50%", width: "50%" }} />
-          <Box
-            display={"flex"}
-            mt={0.5}
-            mb={0.5}
-            ml={"50%"}
-            justifyContent={"space-between"}
-          >
-            <Typography
-              style={{
-                fontSize: 10,
-              }}
-            >
-              Total:
-            </Typography>
-            <Typography style={{ fontSize: 10 }}>
-              {selectedCurrencyType.label[5]}
-              {parseFloat(invoiceTotal).toFixed(2)}
-            </Typography>
-          </Box>
-          <Divider style={{ marginLeft: "50%", width: "50%" }} />
-          {discount === 0 ? (
-            <></>
-          ) : (
-            <>
+          <Grid container>
+            <Grid item lg={6} mt={5}>
+              {bankingDetails !== "" ? (
+                <Box width={"20ch"}>
+                  <Typography style={{ fontSize: 10, color: "gray" }}>
+                    Bank Transfer:
+                  </Typography>
+                  <Typography
+                    style={{
+                      fontSize: 10,
+                      wordWrap: "break-word",
+                      whiteSpace: "pre-line",
+                    }}
+                  >
+                    {`${bankingDetails}`}
+                  </Typography>
+                </Box>
+              ) : (
+                <></>
+              )}
+            </Grid>
+            <Grid item lg={6}>
               <Box
                 display={"flex"}
                 mt={0.5}
                 mb={0.5}
-                ml={"50%"}
                 justifyContent={"space-between"}
               >
                 <Typography
@@ -303,37 +259,101 @@ export default function PDFPreview() {
                     fontSize: 10,
                   }}
                 >
-                  Discount:
+                  Subtotal:
                 </Typography>
-
+                <Box>
+                  <Typography
+                    style={{
+                      fontSize: 10,
+                    }}
+                  >
+                    {selectedCurrencyType.label[5]}
+                    {parseFloat(invoiceSubtotal).toFixed(2)}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box>
+                <Divider />
+              </Box>
+              <Box
+                display={"flex"}
+                mt={0.5}
+                mb={0.5}
+                justifyContent={"space-between"}
+              >
+                <Typography style={{ fontSize: 10 }}>Tax:</Typography>
                 <Typography style={{ fontSize: 10 }}>
                   {selectedCurrencyType.label[5]}
-                  {parseFloat(invoiceDiscount).toFixed(2)}
+                  {parseFloat(invoiceTax).toFixed(2)}
                 </Typography>
               </Box>
-              <Divider style={{ marginLeft: "50%", width: "50%" }} />
-            </>
-          )}
+              <Divider />
+              <Box
+                display={"flex"}
+                mt={0.5}
+                mb={0.5}
+                justifyContent={"space-between"}
+              >
+                <Typography
+                  style={{
+                    fontSize: 10,
+                  }}
+                >
+                  Total:
+                </Typography>
+                <Typography style={{ fontSize: 10 }}>
+                  {selectedCurrencyType.label[5]}
+                  {parseFloat(invoiceTotal).toFixed(2)}
+                </Typography>
+              </Box>
+              <Divider />
+              {discount === 0 ? (
+                <></>
+              ) : (
+                <>
+                  <Box
+                    display={"flex"}
+                    mt={0.5}
+                    mb={0.5}
+                    justifyContent={"space-between"}
+                  >
+                    <Typography
+                      style={{
+                        fontSize: 10,
+                      }}
+                    >
+                      Discount:
+                    </Typography>
 
-          <Box
-            display={"flex"}
-            mt={0.5}
-            mb={0.5}
-            ml={"50%"}
-            justifyContent={"space-between"}
-          >
-            <Typography
-              style={{
-                fontSize: 10,
-              }}
-            >
-              Balance Due:
-            </Typography>
-            <Typography style={{ fontSize: 13 }}>
-              {selectedCurrencyType.label[5]}
-              {parseFloat(invoiceBalanceDue).toFixed(2)}
-            </Typography>
-          </Box>
+                    <Typography style={{ fontSize: 10 }}>
+                      {selectedCurrencyType.label[5]}
+                      {parseFloat(invoiceDiscount).toFixed(2)}
+                    </Typography>
+                  </Box>
+                  <Divider />
+                </>
+              )}
+
+              <Box
+                display={"flex"}
+                mt={0.5}
+                mb={0.5}
+                justifyContent={"space-between"}
+              >
+                <Typography
+                  style={{
+                    fontSize: 10,
+                  }}
+                >
+                  Balance Due:
+                </Typography>
+                <Typography style={{ fontSize: 13 }}>
+                  {selectedCurrencyType.label[5]}
+                  {parseFloat(invoiceBalanceDue).toFixed(2)}
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
           <Box>
             <Typography style={{ fontSize: 10, color: "gray" }}>
               Memo:
