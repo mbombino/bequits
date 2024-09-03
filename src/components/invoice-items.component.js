@@ -109,6 +109,10 @@ export default function ItemsSections() {
   };
 
   const handleEditItemQuantity = (event, { item }) => {
+    const { value, selectionStart } = document.getElementById(
+      item.itemNumber + ".qty-input"
+    );
+    checkPrecedingZero(selectionStart, value, item.itemNumber + ".qty-input");
     const itemToEdit = {
       ...item,
       itemQuantity: event.target.value,

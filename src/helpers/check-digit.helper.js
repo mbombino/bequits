@@ -1,8 +1,10 @@
-const arrowKeyCodes = [37, 38, 39, 40];
-const numPadKeyCodes = [96, 97, 98, 99, 100, 101, 102, 103, 104, 105];
-const floatingKeyCode = 190;
+//allowed key codes
+const arrowKeyCodes = [37, 38, 39, 40]; //left, up, right, down
+const numPadKeyCodes = [96, 97, 98, 99, 100, 101, 102, 103, 104, 105]; //0-9 on numpad
+const floatingKeyCode = 190; //decimal point
 const backspaceKeyCode = 8;
 
+//check digit input and prevent invalid keys
 export function checkDigit(keyCode, key, selectionStart, value, event) {
   const isValidKey =
     (keyCode >= 48 && keyCode <= 57) ||
@@ -15,12 +17,9 @@ export function checkDigit(keyCode, key, selectionStart, value, event) {
   if (!isValidKey || isLeadingZero) {
     event.preventDefault();
   }
-
-  if (value[0] === "0") {
-    value = value.slice(1);
-  }
 }
 
+//check rate input and prevent invalid keys and invalid decimal points
 export function checkRateDigit(keyCode, key, selectionStart, value, event) {
   const isValidNumericKey =
     (keyCode >= 48 && keyCode <= 57) || numPadKeyCodes.includes(keyCode);
@@ -48,6 +47,8 @@ export function checkRateDigit(keyCode, key, selectionStart, value, event) {
     event.preventDefault();
   }
 }
+
+//check preceding zero and remove it
 export function checkPrecedingZero(selectionStart, value, inputId) {
   if (
     (selectionStart <= 1 && value.length > 2) ||
