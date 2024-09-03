@@ -18,6 +18,12 @@ import {
 } from "../store/invoiceSlice";
 
 import { useSelector, useDispatch } from "react-redux";
+import {
+  checkDigit,
+  checkPrecedingZero,
+  checkRateDigit,
+} from "../helpers/check-digit.helper";
+
 export default function ItemsSections() {
   const [menu, setMenu] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -28,11 +34,6 @@ export default function ItemsSections() {
   const itemsData = useSelector((state) => state.invoice.itemsData);
   const dispatch = useDispatch();
 
-  const arrowKeyCodes = [37, 38, 39, 40];
-  const numPadKeyCodes = [96, 97, 98, 99, 100, 101, 102, 103, 104, 105];
-  const floatingKeyCode = 190;
-  const backspaceKeyCode = 8;
-
   const handleClick = (index) => (event) => {
     setMenu(event.currentTarget);
     setCurrentIndex(index);
@@ -41,108 +42,47 @@ export default function ItemsSections() {
     setMenu(null);
   };
 
-  const stuff = {};
-  itemsData.map((item) => (stuff[item.itemNumber] = false));
-
-  const [checked, setChecked] = useState(stuff);
+  const [checked, setChecked] = useState({});
 
   const handleChange = (event, { item }) => {
-    if (event.target.checked) {
-      const itemToEdit = {
-        itemNumber: item.itemNumber,
-        itemDescription: item.itemDescription,
-        itemQuantity: item.itemQuantity,
-        itemRate: item.itemRate,
-        itemRatePrefix: item.itemRatePrefix,
-        itemTax: 8,
-      };
-      dispatch(setEditItemsData(itemToEdit));
-    } else {
-      const itemToEdit = {
-        itemNumber: item.itemNumber,
-        itemDescription: item.itemDescription,
-        itemQuantity: item.itemQuantity,
-        itemRate: item.itemRate,
-        itemRatePrefix: item.itemRatePrefix,
-        itemTax: 0,
-      };
-      dispatch(setEditItemsData(itemToEdit));
-    }
-    setChecked({
-      ...checked,
-      [event.target.name]: event.target.checked,
-    });
+    const isChecked = event.target.checked;
+    setChecked((prevState) => ({
+      ...prevState,
+      [item.itemNumber]: isChecked,
+    }));
+
+    const itemToEdit = {
+      ...item,
+      itemTax: isChecked ? 8 : 0,
+    };
+    dispatch(setEditItemsData(itemToEdit));
   };
 
   const handleCheckQuantityDigit = (event, { item }) => {
-    let input = document.getElementById(item.itemNumber + ".qty-input");
-    const cursorPosition = input.selectionStart;
-
-    if (
-      (((event.keyCode < 48 && !arrowKeyCodes.includes(event.keyCode)) ||
-        (event.keyCode > 57 && !numPadKeyCodes.includes(event.keyCode))) &&
-        !(event.keyCode === backspaceKeyCode)) ||
-      (cursorPosition === 0 && Number(event.key) === 0 && input.value !== "")
-    ) {
-      event.preventDefault();
-    }
-    if (Number(input.value[0]) === 0) {
-      let newValue = input.value.replace("0", "");
-      input.value = newValue;
-    }
+    const { value, selectionStart } = document.getElementById(
+      item.itemNumber + ".qty-input"
+    );
+    const keyCode = event.keyCode;
+    const key = event.key;
+    checkDigit(keyCode, key, selectionStart, value, event);
   };
 
   const handleCheckRateDigit = (event, { item }) => {
-    let input = document.getElementById(item.itemNumber + ".rate-input");
-    const cursorPosition = input.selectionStart;
-
-    if (
-      (((event.keyCode < 48 && !arrowKeyCodes.includes(event.keyCode)) ||
-        (event.keyCode > 57 && !numPadKeyCodes.includes(event.keyCode))) &&
-        !(
-          event.keyCode === floatingKeyCode ||
-          event.keyCode === backspaceKeyCode
-        )) ||
-      (input.value.split(".")[1]?.length + 1 > 2 &&
-        !(
-          event.keyCode === backspaceKeyCode ||
-          arrowKeyCodes.includes(event.keyCode)
-        ) &&
-        cursorPosition > input.value.split(".")[0]?.length) ||
-      (cursorPosition === 0 && Number(event.key) === 0 && input.value !== "") ||
-      (input.value.includes(".") && event.key === ".") ||
-      (Number(input.value[0]) === 0 &&
-        Number(event.key) === 0 &&
-        !input.value.includes("."))
-    ) {
-      event.preventDefault();
-    }
+    const { value, selectionStart } = document.getElementById(
+      item.itemNumber + ".rate-input"
+    );
+    const keyCode = event.keyCode;
+    const key = event.key;
+    checkRateDigit(keyCode, key, selectionStart, value, event);
   };
-  const handleCheckTaxDigit = (event, { item }) => {
-    let input = document.getElementById(item.itemNumber + ".tax-input");
-    const cursorPosition = input.selectionStart;
 
-    if (
-      (((event.keyCode < 48 && !arrowKeyCodes.includes(event.keyCode)) ||
-        (event.keyCode > 57 && !numPadKeyCodes.includes(event.keyCode))) &&
-        !(
-          event.keyCode === floatingKeyCode ||
-          event.keyCode === backspaceKeyCode
-        )) ||
-      (input.value.split(".")[1]?.length + 1 > 2 &&
-        !(
-          event.keyCode === backspaceKeyCode ||
-          arrowKeyCodes.includes(event.keyCode)
-        ) &&
-        cursorPosition > input.value.split(".")[0]?.length) ||
-      (cursorPosition === 0 && Number(event.key) === 0 && input.value !== "") ||
-      (input.value.includes(".") && event.key === ".") ||
-      (Number(input.value[0]) === 0 &&
-        Number(event.key) === 0 &&
-        !input.value.includes("."))
-    ) {
-      event.preventDefault();
-    }
+  const handleCheckTaxDigit = (event, { item }) => {
+    const { value, selectionStart } = document.getElementById(
+      item.itemNumber + ".tax-input"
+    );
+    const keyCode = event.keyCode;
+    const key = event.key;
+    checkRateDigit(keyCode, key, selectionStart, value, event);
   };
 
   const handleAddItem = () => {
@@ -161,96 +101,45 @@ export default function ItemsSections() {
 
   const handleEditItemDescription = (event, { item }) => {
     const itemToEdit = {
-      itemNumber: item.itemNumber,
+      ...item,
       itemDescription: event.target.value,
-      itemQuantity: item.itemQuantity,
-      itemRatePrefix: item.itemRatePrefix,
-      itemRate: item.itemRate,
-      itemTax: item.itemTax,
     };
 
     dispatch(setEditItemsData(itemToEdit));
   };
   const handleEditItemQuantity = (event, { item }) => {
     const itemToEdit = {
-      itemNumber: item.itemNumber,
-      itemDescription: item.itemDescription,
+      ...item,
       itemQuantity: event.target.value,
-      itemRatePrefix: item.itemRatePrefix,
-      itemRate: item.itemRate,
-      itemTax: item.itemTax,
     };
     dispatch(setEditItemsData(itemToEdit));
   };
   const handleEditItemRate = (event, { item }) => {
-    let input = document.getElementById(item.itemNumber + ".rate-input");
-    const cursorPosition = input.selectionStart;
-    if (
-      (cursorPosition === 0 && input.value.length > 2) ||
-      (cursorPosition === 1 && input.value.length > 2) ||
-      (input.value[1] > 0 && input.value.length === 2)
-    ) {
-      let newValue = input.value.replace(/^0+/, "");
-      input.value = parseFloat(newValue);
-    }
+    const { value, selectionStart } = document.getElementById(
+      item.itemNumber + ".rate-input"
+    );
+    checkPrecedingZero(selectionStart, value, item.itemNumber + ".rate-input");
 
-    let textFieldPrefix = "";
-    if (event.target.value !== "") {
-      textFieldPrefix = selectedCurrencyType.label[5];
-      const itemToEdit = {
-        itemNumber: item.itemNumber,
-        itemDescription: item.itemDescription,
-        itemQuantity: item.itemQuantity,
-        itemRatePrefix: textFieldPrefix,
-        itemRate: event.target.value,
-        itemTax: item.itemTax,
-      };
-      dispatch(setEditItemsData(itemToEdit));
-    } else {
-      const itemToEdit = {
-        itemNumber: item.itemNumber,
-        itemDescription: item.itemDescription,
-        itemQuantity: item.itemQuantity,
-        itemRatePrefix: textFieldPrefix,
-        itemRate: 0,
-        itemTax: item.itemTax,
-      };
-      dispatch(setEditItemsData(itemToEdit));
-    }
+    const newRate = event.target.value;
+    const textFieldPrefix = newRate !== "" ? selectedCurrencyType.label[5] : "";
+
+    const itemToEdit = {
+      ...item,
+      itemRatePrefix: textFieldPrefix,
+      itemRate: newRate !== "" ? newRate : 0,
+    };
+    dispatch(setEditItemsData(itemToEdit));
   };
   const handleEditItemTax = (event, { item }) => {
-    let input = document.getElementById(item.itemNumber + ".tax-input");
-    const cursorPosition = input.selectionStart;
-
-    if (
-      (cursorPosition === 0 && input.value.length > 2) ||
-      (cursorPosition === 1 && input.value.length > 2) ||
-      (input.value[1] > 0 && input.value.length === 2)
-    ) {
-      let newValue = input.value.replace(/^0+/, "");
-      input.value = parseFloat(newValue);
-    }
-    if (event.target.value !== "") {
-      const itemToEdit = {
-        itemNumber: item.itemNumber,
-        itemDescription: item.itemDescription,
-        itemQuantity: item.itemQuantity,
-        itemRate: item.itemRate,
-        itemRatePrefix: item.itemRatePrefix,
-        itemTax: event.target.value,
-      };
-      dispatch(setEditItemsData(itemToEdit));
-    } else {
-      const itemToEdit = {
-        itemNumber: item.itemNumber,
-        itemDescription: item.itemDescription,
-        itemQuantity: item.itemQuantity,
-        itemRate: item.itemRate,
-        itemRatePrefix: item.itemRatePrefix,
-        itemTax: 0,
-      };
-      dispatch(setEditItemsData(itemToEdit));
-    }
+    const { value, selectionStart } = document.getElementById(
+      item.itemNumber + ".tax-input"
+    );
+    checkPrecedingZero(selectionStart, value, item.itemNumber + ".tax-input");
+    const itemToEdit = {
+      ...item,
+      itemTax: event.target.value !== "" ? event.target.value : 0,
+    };
+    dispatch(setEditItemsData(itemToEdit));
   };
   return (
     <Box>

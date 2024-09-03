@@ -1,43 +1,8 @@
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  PDFDownloadLink,
-  BlobProvider,
-} from "@react-pdf/renderer";
-import {
-  Box,
-  Typography,
-  Button,
-  Grid,
-  IconButton,
-  Drawer,
-  Paper,
-  Menu,
-  MenuItem,
-  MenuList,
-  ListItemText,
-  Divider,
-  ListItemIcon,
-} from "@mui/material";
+import { Box, Typography, Grid, Divider } from "@mui/material";
 
 import React, { useState } from "react";
 
 import { useSelector } from "react-redux";
-
-import {
-  Download,
-  DownloadDoneRounded,
-  Settings,
-  SettingsOutlined,
-  Cloud,
-  ContentCut,
-  ContentCopy,
-  ContentPaste,
-} from "@mui/icons-material";
 
 export default function PDFPreview() {
   const [defaultCoverImage, setDefaultCoverImage] = useState();
@@ -83,24 +48,6 @@ export default function PDFPreview() {
   }
 
   const invoiceBalanceDue = invoiceTotal - invoiceDiscount;
-
-  const InvoiceTitle = () => (
-    <View style={styles.titleContainer}>
-      <View style={styles.spaceBetween}>
-        <Image style={styles.logo} src={logoImage} />
-        <Text style={styles.reportTitle}>Xpress Enterprises</Text>
-      </View>
-    </View>
-  );
-  const Invoice = () => {
-    return (
-      <Document>
-        <Page size="A4" style={styles.page}>
-          <InvoiceTitle />
-        </Page>
-      </Document>
-    );
-  };
 
   return (
     <Box>
@@ -369,18 +316,3 @@ export default function PDFPreview() {
     </Box>
   );
 }
-const styles = StyleSheet.create({
-  spaceBetween: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    color: "#3E3E3E",
-  },
-
-  titleContainer: { flexDirection: "row", marginTop: 24 },
-
-  logo: { width: 150, alignSelf: "flex-end" },
-
-  reportTitle: { fontSize: 16, textAlign: "right" },
-});
