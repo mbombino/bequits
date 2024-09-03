@@ -18,23 +18,29 @@ import {
   Switch,
 } from "@mui/material";
 
-import {
-  Delete,
-  MoreVertRounded,
-  Percent,
-  SettingsOutlined,
-} from "@mui/icons-material";
+import { Delete, MoreVertRounded, Percent } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setBankingDetails,
   setDiscount,
   setSelectedDiscountType,
 } from "../store/invoiceSlice";
+import {
+  checkPrecedingZero,
+  checkRateDigit,
+} from "../helpers/check-digit.helper";
 
 export default function PaymentSection() {
+  //redux state
+
   const selectedDiscountType = useSelector(
     (state) => state.invoice.selectedDiscountType
   );
+  const bankingDetails = useSelector((state) => state.invoice.bankingDetails);
+  const discount = useSelector((state) => state.invoice.discount);
+
+  //local state
+
   const [checked, setChecked] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(selectedDiscountType);
@@ -42,20 +48,29 @@ export default function PaymentSection() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [contractChecked, setContractChecked] = React.useState(false);
 
-  const arrowKeyCodes = [37, 38, 39, 40];
-  const numPadKeyCodes = [96, 97, 98, 99, 100, 101, 102, 103, 104, 105];
-  const floatingKeyCode = 190;
-  const backspaceKeyCode = 8;
+  const dispatch = useDispatch();
+
+  //menu functions
+
+  const openExtras = Boolean(anchorEl);
+  const handlePaymentExtrasOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handlePaymentExtrasClose = () => {
+    setAnchorEl(null);
+  };
+
+  //contract functions
 
   const handleContractChecked = (event) => {
     setContractChecked(event.target.checked);
   };
 
-  const openExtras = Boolean(anchorEl);
+  //tooltip functions
 
-  const bankingDetails = useSelector((state) => state.invoice.bankingDetails);
-  const discount = useSelector((state) => state.invoice.discount);
-  const dispatch = useDispatch();
+  const handleTooltipOpen = () => {
+    setOpen(true);
+  };
 
   const handleTooltipClose = () => {
     if (bankingDetails === "") {
@@ -63,10 +78,6 @@ export default function PaymentSection() {
       setOpen(false);
     }
     setOpen(false);
-  };
-
-  const handleTooltipOpen = () => {
-    setOpen(true);
   };
 
   const handleCheckChange = (event) => {
@@ -79,6 +90,8 @@ export default function PaymentSection() {
     }
   };
 
+  //banking details functions
+
   const handleBankDetailsChange = (event) => {
     dispatch(setBankingDetails(event.target.value));
     if (event.target.value === "") {
@@ -87,56 +100,36 @@ export default function PaymentSection() {
       setChecked(true);
     }
   };
-  const handleFixedDepositChange = (event) => {
-    setValue(event.target.value);
-    if (event.target.value === "percent") {
-      dispatch(setSelectedDiscountType("percent"));
-    } else {
-      dispatch(setSelectedDiscountType("fixed"));
-    }
-  };
 
-  const handlePaymentExtrasOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handlePaymentExtrasClose = () => {
-    setAnchorEl(null);
+  //discount functions
+
+  const handleDiscountTypeChange = (event) => {
+    const newValue = event.target.value;
+    setValue(newValue);
+    dispatch(setSelectedDiscountType(newValue));
   };
 
   const handleCheckDiscountDigit = (event) => {
-    let input = document.getElementById("discount-input");
-    const cursorPosition = input.selectionStart;
-
-    if (
-      (((event.keyCode < 48 && !arrowKeyCodes.includes(event.keyCode)) ||
-        (event.keyCode > 57 && !numPadKeyCodes.includes(event.keyCode))) &&
-        !(
-          event.keyCode === floatingKeyCode ||
-          event.keyCode === backspaceKeyCode
-        )) ||
-      (input.value.split(".")[1]?.length + 1 > 2 &&
-        !(
-          event.keyCode === backspaceKeyCode ||
-          arrowKeyCodes.includes(event.keyCode)
-        ) &&
-        cursorPosition > input.value.split(".")[0]?.length) ||
-      (cursorPosition === 0 && Number(event.key) === 0 && input.value !== "") ||
-      (input.value.includes(".") && event.key === ".") ||
-      (Number(input.value[0]) === 0 &&
-        Number(event.key) === 0 &&
-        !input.value.includes("."))
-    ) {
-      event.preventDefault();
-    }
+    const { value, selectionStart } = document.getElementById("discount-input");
+    const keyCode = event.keyCode;
+    const key = event.key;
+    checkRateDigit(keyCode, key, selectionStart, value, event);
   };
+
   const handlePercentDiscountChange = (event) => {
+    const { value, selectionStart } = document.getElementById("discount-input");
+    checkPrecedingZero(selectionStart, value, "discount-input");
     dispatch(setDiscount(event.target.value));
     dispatch(setSelectedDiscountType("percent"));
   };
+
   const handleFixedDiscountChange = (event) => {
+    const { value, selectionStart } = document.getElementById("discount-input");
+    checkPrecedingZero(selectionStart, value, "discount-input");
     dispatch(setDiscount(event.target.value));
     dispatch(setSelectedDiscountType("fixed"));
   };
+
   return (
     <Box>
       <Box m={5} display={"flex"} justifyContent={"space-between"}>
@@ -181,7 +174,6 @@ export default function PaymentSection() {
                   </IconButton>
                 </Box>
               </MenuItem>
-
               <Divider />
               <MenuItem>
                 <Box
@@ -299,9 +291,8 @@ export default function PaymentSection() {
               row
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
-              //onKeyDown={(event) => handleCheckFixedDiscountDigit(event)}
               value={value}
-              onChange={handleFixedDepositChange}
+              onChange={(event) => handleDiscountTypeChange(event)}
             >
               <FormControlLabel
                 value="fixed"

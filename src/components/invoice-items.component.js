@@ -107,6 +107,7 @@ export default function ItemsSections() {
 
     dispatch(setEditItemsData(itemToEdit));
   };
+
   const handleEditItemQuantity = (event, { item }) => {
     const itemToEdit = {
       ...item,
@@ -114,6 +115,7 @@ export default function ItemsSections() {
     };
     dispatch(setEditItemsData(itemToEdit));
   };
+
   const handleEditItemRate = (event, { item }) => {
     const { value, selectionStart } = document.getElementById(
       item.itemNumber + ".rate-input"
@@ -130,6 +132,7 @@ export default function ItemsSections() {
     };
     dispatch(setEditItemsData(itemToEdit));
   };
+
   const handleEditItemTax = (event, { item }) => {
     const { value, selectionStart } = document.getElementById(
       item.itemNumber + ".tax-input"
@@ -141,6 +144,7 @@ export default function ItemsSections() {
     };
     dispatch(setEditItemsData(itemToEdit));
   };
+
   return (
     <Box>
       <Box
