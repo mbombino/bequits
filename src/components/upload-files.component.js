@@ -3,7 +3,6 @@ import {
   AddAPhotoRounded,
   ChangeCircleRounded,
   Delete,
-  DeleteForeverRounded,
   FileUploadRounded,
 } from "@mui/icons-material";
 import UploadFileService from "../services/upload-files.service";
@@ -12,18 +11,22 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 export default function UploadFile() {
+  //local state
   const [defaultCoverImages, setDefaultCoverImages] = useState();
   const [uploadedFile, setUploadedFile] = useState();
   const [logoImageSelected, setLogoImageSelected] = useState(false);
 
+  //redux dispatch
   const dispatch = useDispatch();
 
+  //get default cover images
   useEffect(() => {
     UploadFileService.getFiles().then((files) => {
       setDefaultCoverImages(files.data);
     });
   }, []);
 
+  //get base64
   function getBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -33,6 +36,7 @@ export default function UploadFile() {
     });
   }
 
+  //upload logo image
   const upload = (event) => {
     let currentFile = event.target.files[0];
 
@@ -42,6 +46,8 @@ export default function UploadFile() {
       dispatch(setLogoImage(result));
     });
   };
+
+  //handle logo image delete change
   const handleLogoImageDeleteChange = () => {
     setLogoImageSelected(false);
     dispatch(setLogoImage(""));

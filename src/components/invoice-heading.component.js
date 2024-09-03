@@ -5,7 +5,7 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-import { MoreVertRounded, SettingsOutlined } from "@mui/icons-material";
+import { MoreVertRounded } from "@mui/icons-material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,13 +19,17 @@ import {
 import dayjs from "dayjs";
 
 export default function HeadingSection() {
+  //redux state
   const currencyTypes = useSelector((state) => state.invoice.currencyTypes);
   const invoiceTypes = useSelector((state) => state.invoice.invoiceTypes);
   const invoiceDate = useSelector((state) => state.invoice.invoiceDate);
   const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
   const billAddressData = useSelector((state) => state.invoice.billAddressData);
+
+  //redux dispatch
   const dispatch = useDispatch();
-  const defaultDate = new Date(invoiceDate);
+
+  //currency type functions
 
   const handleCurrencyTypeSelection = (event) => {
     const currencyType = currencyTypes.find(
@@ -34,15 +38,23 @@ export default function HeadingSection() {
     dispatch(setSelectedCurrencyType(currencyType));
   };
 
+  //invoice type functions
+
   const handleInvoiceTypeSelection = (event) => {
     const invoiceType = invoiceTypes.find(
       (e) => e.value === event.target.value
     );
     dispatch(setSelectedInvoiceType(invoiceType));
   };
+
+  //invoice number functions
+
   const handleInvoiceNumberChange = (event) => {
     dispatch(setInvoiceNumber(event.target.value));
   };
+
+  //bill address functions
+
   const handleFromBillAddressChange = (event) => {
     const addressToAdd = {
       fromAddress: event.target.value,
@@ -50,6 +62,7 @@ export default function HeadingSection() {
     };
     dispatch(setBillAddressData(addressToAdd));
   };
+
   const handleToBillAddressChange = (event) => {
     const addressToAdd = {
       fromAddress: billAddressData.fromAddress,
@@ -57,6 +70,10 @@ export default function HeadingSection() {
     };
     dispatch(setBillAddressData(addressToAdd));
   };
+
+  //date functions
+
+  const defaultDate = new Date(invoiceDate);
   const handleInvoiceDateChange = (event) => {
     dispatch(
       setInvoiceDate(

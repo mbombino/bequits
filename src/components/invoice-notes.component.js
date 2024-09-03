@@ -3,8 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { setMemo } from "../store/invoiceSlice";
 
 export default function NotesSection() {
+  //redux state
   const memo = useSelector((state) => state.invoice.memo);
+
+  //redux dispatch
   const dispatch = useDispatch();
+
+  //memo functions
+
   const handleMemoChange = (event) => {
     dispatch(setMemo(event.target.value));
   };

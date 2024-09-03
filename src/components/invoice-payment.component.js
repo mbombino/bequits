@@ -32,23 +32,22 @@ import {
 
 export default function PaymentSection() {
   //redux state
-
   const selectedDiscountType = useSelector(
     (state) => state.invoice.selectedDiscountType
   );
   const bankingDetails = useSelector((state) => state.invoice.bankingDetails);
   const discount = useSelector((state) => state.invoice.discount);
 
-  //local state
+  //redux dispatch
+  const dispatch = useDispatch();
 
+  //local state
   const [checked, setChecked] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(selectedDiscountType);
   const [discountHidden, setDiscountHidden] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [contractChecked, setContractChecked] = React.useState(false);
-
-  const dispatch = useDispatch();
 
   //menu functions
 

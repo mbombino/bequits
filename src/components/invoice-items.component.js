@@ -25,15 +25,21 @@ import {
 } from "../helpers/check-digit.helper";
 
 export default function ItemsSections() {
-  const [menu, setMenu] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
+  //redux state
   const selectedCurrencyType = useSelector(
     (state) => state.invoice.selectedCurrencyType
   );
   const itemsData = useSelector((state) => state.invoice.itemsData);
+
+  //redux dispatch
   const dispatch = useDispatch();
 
+  //local state
+  const [menu, setMenu] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [checked, setChecked] = useState({});
+
+  //menu functions
   const handleClick = (index) => (event) => {
     setMenu(event.currentTarget);
     setCurrentIndex(index);
@@ -42,7 +48,7 @@ export default function ItemsSections() {
     setMenu(null);
   };
 
-  const [checked, setChecked] = useState({});
+  //tax functions
 
   const handleChange = (event, { item }) => {
     const isChecked = event.target.checked;
@@ -57,6 +63,8 @@ export default function ItemsSections() {
     };
     dispatch(setEditItemsData(itemToEdit));
   };
+
+  //digit check functions
 
   const handleCheckQuantityDigit = (event, { item }) => {
     const { value, selectionStart } = document.getElementById(
@@ -85,6 +93,8 @@ export default function ItemsSections() {
     checkRateDigit(keyCode, key, selectionStart, value, event);
   };
 
+  //add item functions
+
   const handleAddItem = () => {
     const uid = Date.now().toString(32) + Math.random().toString(16);
     const itemToAdd = {
@@ -99,6 +109,8 @@ export default function ItemsSections() {
     dispatch(setAddItemsData(itemToAdd));
   };
 
+  //edit item functions
+
   const handleEditItemDescription = (event, { item }) => {
     const itemToEdit = {
       ...item,
@@ -107,6 +119,8 @@ export default function ItemsSections() {
 
     dispatch(setEditItemsData(itemToEdit));
   };
+
+  //edit item quantity functions
 
   const handleEditItemQuantity = (event, { item }) => {
     const { value, selectionStart } = document.getElementById(
@@ -119,6 +133,8 @@ export default function ItemsSections() {
     };
     dispatch(setEditItemsData(itemToEdit));
   };
+
+  //edit item rate functions
 
   const handleEditItemRate = (event, { item }) => {
     const { value, selectionStart } = document.getElementById(
@@ -137,6 +153,8 @@ export default function ItemsSections() {
     dispatch(setEditItemsData(itemToEdit));
   };
 
+  //edit item tax functions
+
   const handleEditItemTax = (event, { item }) => {
     const { value, selectionStart } = document.getElementById(
       item.itemNumber + ".tax-input"
@@ -147,6 +165,13 @@ export default function ItemsSections() {
       itemTax: event.target.value !== "" ? event.target.value : 0,
     };
     dispatch(setEditItemsData(itemToEdit));
+  };
+
+  //delete item functions
+
+  const handleDeleteItem = ({ item }) => {
+    dispatch(setDeleteItemsData(item));
+    handleClose();
   };
 
   return (
@@ -242,8 +267,7 @@ export default function ItemsSections() {
               <MenuItem
                 style={{ width: 150 }}
                 onClick={() => {
-                  dispatch(setDeleteItemsData({ item }));
-                  handleClose();
+                  handleDeleteItem({ item });
                 }}
               >
                 <Box

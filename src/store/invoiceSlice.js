@@ -108,7 +108,7 @@ export const invoiceSlice = createSlice({
     },
     setDeleteItemsData: (state, action) => {
       const itemToDelete = state.itemsData.find(
-        (e) => e.itemNumber === action.payload.item.itemNumber
+        (e) => e.itemNumber === action.payload.itemNumber
       );
 
       state.itemsData.splice(state.itemsData.indexOf(itemToDelete), 1);
