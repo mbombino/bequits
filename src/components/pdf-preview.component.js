@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function PDFPreview() {
-  const [defaultCoverImage, setDefaultCoverImage] = useState();
   const coverImageUrl = useSelector((state) => state.invoice.coverImageUrl);
   const logoImage = useSelector((state) => state.invoice.logoImage);
   const selectedCurrencyType = useSelector(
@@ -82,9 +81,12 @@ export default function PDFPreview() {
               {invoiceNumber !== "" ? (
                 <Box display={"flex"} justifyContent={"space-between"}>
                   <Typography style={{ fontSize: 10 }}>
-                    #{invoiceNumber} * {invoiceDate.toString().split(" ")[1]}{" "}
-                    {invoiceDate.toString().split(" ")[2]},{" "}
-                    {invoiceDate.toString().split(" ")[3]}
+                    #{invoiceNumber} •{" "}
+                    {new Date(invoiceDate).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </Typography>
                   {logoImage !== "" ? (
                     <img src={logoImage} alt="img" style={{ width: 30 }} />
@@ -94,9 +96,12 @@ export default function PDFPreview() {
                 </Box>
               ) : (
                 <Typography style={{ fontSize: 10 }}>
-                  {invoiceNumber} * {invoiceDate.toString().split(" ")[1]}{" "}
-                  {invoiceDate.toString().split(" ")[2]},{" "}
-                  {invoiceDate.toString().split(" ")[3]}
+                  {invoiceNumber} •{" "}
+                  {new Date(invoiceDate).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </Typography>
               )}
             </Box>
@@ -164,7 +169,7 @@ export default function PDFPreview() {
                           direction: "rtl",
                         }}
                       >
-                        {selectedCurrencyType.label[5]}
+                        {selectedCurrencyType.symbol}
                         {parseFloat(item.itemRate).toFixed(2)}
                       </Typography>
                     </Grid>
@@ -214,7 +219,7 @@ export default function PDFPreview() {
                       fontSize: 10,
                     }}
                   >
-                    {selectedCurrencyType.label[5]}
+                    {selectedCurrencyType.symbol}
                     {parseFloat(invoiceSubtotal).toFixed(2)}
                   </Typography>
                 </Box>
@@ -230,7 +235,7 @@ export default function PDFPreview() {
               >
                 <Typography style={{ fontSize: 10 }}>Tax:</Typography>
                 <Typography style={{ fontSize: 10 }}>
-                  {selectedCurrencyType.label[5]}
+                  {selectedCurrencyType.symbol}
                   {parseFloat(invoiceTax).toFixed(2)}
                 </Typography>
               </Box>
@@ -249,7 +254,7 @@ export default function PDFPreview() {
                   Total:
                 </Typography>
                 <Typography style={{ fontSize: 10 }}>
-                  {selectedCurrencyType.label[5]}
+                  {selectedCurrencyType.symbol}
                   {parseFloat(invoiceTotal).toFixed(2)}
                 </Typography>
               </Box>
@@ -273,7 +278,7 @@ export default function PDFPreview() {
                     </Typography>
 
                     <Typography style={{ fontSize: 10 }}>
-                      {selectedCurrencyType.label[5]}
+                      {selectedCurrencyType.symbol}
                       {parseFloat(invoiceDiscount).toFixed(2)}
                     </Typography>
                   </Box>
@@ -295,7 +300,7 @@ export default function PDFPreview() {
                   Balance Due:
                 </Typography>
                 <Typography style={{ fontSize: 13 }}>
-                  {selectedCurrencyType.label[5]}
+                  {selectedCurrencyType.symbol}
                   {parseFloat(invoiceBalanceDue).toFixed(2)}
                 </Typography>
               </Box>

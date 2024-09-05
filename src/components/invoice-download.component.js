@@ -1,30 +1,55 @@
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  PDFDownloadLink,
-  BlobProvider,
-} from "@react-pdf/renderer";
-export default function InvoiceDownload() {
-  const InvoiceTitle = () => (
-    <View style={styles.titleContainer}>
-      <View style={styles.spaceBetween}>
-        <Image style={styles.logo} src={logoImage} />
-        <Text style={styles.reportTitle}>Xpress Enterprises</Text>
+import React, { useState } from "react";
+import { Document, View, Text, Page, StyleSheet } from "@react-pdf/renderer";
+
+export default function InvoiceDownloadSection({
+  logoImage,
+  currencyType,
+  invoiceType,
+  invoiceDate,
+  invoiceNumber,
+}) {
+  const InvoiceHeading = () => (
+    <View style={styles.padding}>
+      <View>
+        <Text style={styles.invoiceTypeFontSize}>{invoiceType}</Text>
+      </View>
+      <View style={styles.marginTop}>
+        {invoiceNumber === "" ? (
+          <Text>
+            {invoiceNumber} •{" "}
+            {new Date(invoiceDate).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </Text>
+        ) : (
+          <View style={styles.flex}>
+            <Text>
+              #{invoiceNumber} •{" "}
+              {new Date(invoiceDate).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );
-  const Invoice = () => {
-    return (
-      <Document>
-        <Page size="A4" style={styles.page}>
-          <InvoiceTitle />
-        </Page>
-      </Document>
-    );
-  };
-  return <div>InvoiceDownload</div>;
+
+  return (
+    <Document>
+      <Page size="A4">
+        <InvoiceHeading />
+      </Page>
+    </Document>
+  );
 }
+const styles = StyleSheet.create({
+  padding: { padding: 20 },
+  invoiceTypeFontSize: { fontSize: 30, fontWeight: "bold" },
+  marginTop: { marginTop: 5 },
+  flex: { display: "flex", justifyContent: "space-between" },
+});
