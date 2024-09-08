@@ -143,12 +143,12 @@ export default function ItemsSections() {
     checkPrecedingZero(selectionStart, value, item.itemNumber + ".rate-input");
 
     const newRate = event.target.value;
-    const textFieldPrefix = newRate !== "" ? selectedCurrencyType.label[5] : "";
+    const textFieldPrefix = newRate !== "" ? selectedCurrencyType.symbol : "";
 
     const itemToEdit = {
       ...item,
       itemRatePrefix: textFieldPrefix,
-      itemRate: newRate !== "" ? newRate : 0,
+      itemRate: newRate !== "" ? parseFloat(newRate).toFixed(2) : 0,
     };
     dispatch(setEditItemsData(itemToEdit));
   };

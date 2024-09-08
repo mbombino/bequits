@@ -38,13 +38,10 @@ export default function PDFPreview() {
 
   const invoiceTotal = invoiceSubtotal + invoiceTax;
 
-  let invoiceDiscount = 0;
-
-  if (selectedDiscountType === "percent") {
-    invoiceDiscount = invoiceTotal * (discount / 100);
-  } else {
-    invoiceDiscount = discount;
-  }
+  const invoiceDiscount =
+    selectedDiscountType === "percent"
+      ? invoiceTotal * (discount / 100)
+      : discount;
 
   const invoiceBalanceDue = invoiceTotal - invoiceDiscount;
 

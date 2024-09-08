@@ -23,15 +23,19 @@ export default function InvoiceDetails() {
   const invoiceDate = useSelector((state) => state.invoice.invoiceDate);
   const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
   const billAddressData = useSelector((state) => state.invoice.billAddressData);
+  //items data redux state
+  const itemsData = useSelector((state) => state.invoice.itemsData);
 
   const DownloadInvoice = () => (
     <PDFDownloadLink
       document={
         <InvoiceDownloadSection
-          currencyType={selectedCurrencyType.label}
+          currencySymbol={selectedCurrencyType.symbol}
           invoiceType={selectedInvoiceType.label}
           invoiceDate={invoiceDate}
           invoiceNumber={invoiceNumber}
+          billAddress={billAddressData}
+          items={itemsData}
         />
       }
       fileName="invoice.pdf"
