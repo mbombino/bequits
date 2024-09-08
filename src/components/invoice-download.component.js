@@ -154,7 +154,7 @@ export default function InvoiceDownloadSection({
   };
   const InvoiceMemo = () => (
     <View style={styles.memoContainer}>
-      <Text style={styles.subHeaderText}>MEMO</Text>
+      <Text style={styles.subHeaderText}>PAYMENT INFORMATION</Text>
     </View>
   );
 
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   total: { fontSize: 10, flex: 2 },
-  price: { fontSize: 10, flex: 1.2 },
+  price: { fontSize: 10, flex: 1.4 },
   itemsHeaderContainer: {
     padding: 20,
     backgroundColor: "#f8efee",
@@ -222,6 +222,8 @@ const styles = StyleSheet.create({
     padding: 20,
     borderColor: "whitesmoke",
     borderBottomWidth: 1,
+    marginLeft: 30,
+    marginRight: 30,
   },
   totalContainer: {
     padding: 20,
@@ -237,7 +239,8 @@ const styles = StyleSheet.create({
   memoContainer: {
     padding: 20,
     backgroundColor: "#f8efee",
-    width: "50%",
+    width: "45%",
     marginTop: 20,
+    marginLeft: 30,
   },
 });
