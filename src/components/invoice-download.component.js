@@ -148,6 +148,23 @@ export default function InvoiceDownloadSection({
               {invoiceTotal}
             </Text>
           </View>
+          <View style={{ flexDirection: "row", marginTop: 5 }}>
+            <Text style={styles.total}>DISCOUNT</Text>
+            <Text style={styles.price}>
+              {currencySymbol}
+              {invoiceTotal}
+            </Text>
+          </View>
+          <View style={{ flexDirection: "row", marginTop: 5 }}>
+            <Text style={styles.totalDue}>TOTAL DUE</Text>
+            <Text style={styles.priceDue}>
+              {currencySymbol}
+              {invoiceTotal}
+            </Text>
+          </View>
+        </View>
+        <View style={{ marginLeft: "50%" }}>
+          <Text style={styles.text}>Thank you for your business!</Text>
         </View>
       </View>
     );
@@ -155,6 +172,22 @@ export default function InvoiceDownloadSection({
   const InvoiceMemo = () => (
     <View style={styles.memoContainer}>
       <Text style={styles.subHeaderText}>PAYMENT INFORMATION</Text>
+    </View>
+  );
+  const InvoiceFooter = () => (
+    <View
+      style={{
+        position: "absolute",
+        bottom: 0,
+        backgroundColor: "#f8efee",
+        width: "100%",
+        padding: 10,
+      }}
+    >
+      <Text style={styles.text}>COMPANY NAME</Text>
+      <Text style={styles.text}>COMPANY ADDRESS</Text>
+      <Text style={styles.text}>COMPANY PHONE</Text>
+      <Text style={styles.text}>COMPANY EMAIL</Text>
     </View>
   );
 
@@ -167,6 +200,7 @@ export default function InvoiceDownloadSection({
         <InvoiceItems />
         <InvoiceTotals />
         <InvoiceMemo />
+        <InvoiceFooter />
       </Page>
     </Document>
   );
@@ -174,11 +208,11 @@ export default function InvoiceDownloadSection({
 const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
-    padding: 50,
+    padding: 30,
     backgroundColor: "#f8efee",
   },
   padding: { padding: 50 },
-  invoiceTypeFontSize: { fontSize: 24 },
+  invoiceTypeFontSize: { fontSize: 24, fontWeight: "normal" },
   marginTop: { marginTop: 5 },
   addressContainer: { paddingTop: 20, paddingBottom: 20, marginLeft: 30 },
   billAddress: { flex: 1 },
@@ -211,15 +245,17 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   total: { fontSize: 10, flex: 2 },
+  totalDue: { fontSize: 10, flex: 2, fontWeight: "bold" },
   price: { fontSize: 10, flex: 1.4 },
+  priceDue: { fontSize: 10, flex: 1.4, fontWeight: "bold" },
   itemsHeaderContainer: {
-    padding: 20,
+    padding: 10,
     backgroundColor: "#f8efee",
     marginLeft: 30,
     marginRight: 30,
   },
   itemsContainer: {
-    padding: 20,
+    padding: 10,
     borderColor: "whitesmoke",
     borderBottomWidth: 1,
     marginLeft: 30,
@@ -237,7 +273,7 @@ const styles = StyleSheet.create({
   totalsFlex: { flexDirection: "row", width: "100%", marginTop: 10 },
 
   memoContainer: {
-    padding: 20,
+    padding: 10,
     backgroundColor: "#f8efee",
     width: "45%",
     marginTop: 20,
