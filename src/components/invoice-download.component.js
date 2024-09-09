@@ -124,7 +124,7 @@ export default function InvoiceDownloadSection({
             marginTop: 20,
             marginBottom: 20,
             marginRight: 30,
-            backgroundColor: "#f8efee",
+            backgroundColor: "#d1c2b8",
           }}
         >
           <View style={{ flexDirection: "row" }}>
@@ -179,15 +179,43 @@ export default function InvoiceDownloadSection({
       style={{
         position: "absolute",
         bottom: 0,
-        backgroundColor: "#f8efee",
+        backgroundColor: "#d1c2b8",
         width: "100%",
         padding: 10,
+        //marginLeft: 30,
+        //marginRight: 30,
+        //marginBottom: 30,
       }}
     >
-      <Text style={styles.text}>COMPANY NAME</Text>
-      <Text style={styles.text}>COMPANY ADDRESS</Text>
-      <Text style={styles.text}>COMPANY PHONE</Text>
-      <Text style={styles.text}>COMPANY EMAIL</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text style={styles.text}>COMPANY NAME</Text>
+        <Text style={styles.text}>CELL NUMBER</Text>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginTop: 5,
+        }}
+      >
+        <Text style={styles.text}>COMPANY ADDRESS</Text>
+        <Text style={styles.text}>EMAIL ADDRESS</Text>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginTop: 5,
+        }}
+      >
+        <Text style={styles.text}>COMPANY CITY</Text>
+        <Text style={styles.text}>WEBSITE</Text>
+      </View>
     </View>
   );
 
@@ -196,11 +224,20 @@ export default function InvoiceDownloadSection({
       <Page size="A4">
         <InvoiceHeader />
         <InvoiceHeading />
-        <InvoiceHeaderItems />
-        <InvoiceItems />
-        <InvoiceTotals />
-        <InvoiceMemo />
-        <InvoiceFooter />
+        <View
+          style={{
+            backgroundColor: "#faf6f5",
+            marginLeft: 30,
+            marginRight: 30,
+            height: "75%",
+          }}
+        >
+          <InvoiceHeaderItems />
+          <InvoiceItems />
+          <InvoiceTotals />
+          <InvoiceMemo />
+          <InvoiceFooter />
+        </View>
       </Page>
     </Document>
   );
@@ -209,7 +246,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
     padding: 30,
-    backgroundColor: "#f8efee",
+    backgroundColor: "#d1c2b8",
   },
   padding: { padding: 50 },
   invoiceTypeFontSize: { fontSize: 24, fontWeight: "normal" },
@@ -250,23 +287,23 @@ const styles = StyleSheet.create({
   priceDue: { fontSize: 10, flex: 1.4, fontWeight: "bold" },
   itemsHeaderContainer: {
     padding: 10,
-    backgroundColor: "#f8efee",
-    marginLeft: 30,
-    marginRight: 30,
+    backgroundColor: "#d1c2b8",
+    //marginLeft: 30,
+    //marginRight: 30,
   },
   itemsContainer: {
     padding: 10,
-    borderColor: "whitesmoke",
-    borderBottomWidth: 1,
-    marginLeft: 30,
-    marginRight: 30,
+    borderColor: "#d1c2b8",
+    borderBottomWidth: 0.5,
+    //marginLeft: 30,
+    //marginRight: 30,
   },
   totalContainer: {
     padding: 20,
   },
   totalsContainer: {
     //padding: 20,
-    backgroundColor: "#f8efee",
+    backgroundColor: "#d1c2b8",
   },
   taskDescription: { flex: 1.5 },
   rate: { flex: 0.5 },
@@ -274,9 +311,9 @@ const styles = StyleSheet.create({
 
   memoContainer: {
     padding: 10,
-    backgroundColor: "#f8efee",
+    backgroundColor: "#d1c2b8",
     width: "45%",
     marginTop: 20,
-    marginLeft: 30,
+    //marginLeft: 30,
   },
 });
