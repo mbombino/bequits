@@ -1,4 +1,14 @@
-import { Box, Typography, Grid, Divider } from "@mui/material";
+import { Circle, FilePresent, FilePresentOutlined } from "@mui/icons-material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Divider,
+  AppBar,
+  Toolbar,
+  Button,
+  IconButton,
+} from "@mui/material";
 
 import React, { useState } from "react";
 
@@ -45,10 +55,51 @@ export default function PDFPreview() {
 
   const invoiceBalanceDue = invoiceTotal - invoiceDiscount;
 
+  //get base64
+  function getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
+  //upload logo image
+  const upload = (event) => {
+    let currentFile = event.target.files[0];
+
+    getBase64(currentFile).then((result) => {
+      //setUploadedFile(result);
+      //setLogoImageSelected(true);
+      //dispatch(setLogoImage(result));
+      console.log(result);
+    });
+  };
+
   return (
     <Box>
-      <Box m={5}>
-        <Typography variant="h5">PDF preview</Typography>
+      <Box p={1} bgcolor={"white"} boxShadow={"0px 0px 1px 0px gray"}>
+        <Box display={"flex"} gap={1}>
+          <input
+            id="btn-change"
+            style={{ display: "none" }}
+            type="file"
+            onChange={upload}
+          />
+          <IconButton
+            color="inherit"
+            size="small"
+            sx={{ borderRadius: 2 }}
+            onClick={() => document.getElementById("btn-change").click()}
+          >
+            <FilePresentOutlined />
+          </IconButton>
+          <Divider orientation="vertical" flexItem />
+          <IconButton size="small" sx={{ borderRadius: 2 }}>
+            <Circle sx={{ color: "#d1c2b8" }} />
+          </IconButton>
+        </Box>
       </Box>
 
       <Box

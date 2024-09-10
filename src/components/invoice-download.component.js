@@ -1,17 +1,12 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import {
   Document,
   View,
   Text,
   Page,
   StyleSheet,
-  Svg,
-  G,
-  Polygon,
-  Rect,
   Font,
 } from "@react-pdf/renderer";
-import { Grid } from "@mui/material";
 
 Font.register({
   family: "Roboto",
@@ -305,15 +300,11 @@ const styles = StyleSheet.create({
   itemsHeaderContainer: {
     padding: 10,
     backgroundColor: "#d1c2b8",
-    //marginLeft: 30,
-    //marginRight: 30,
   },
   itemsContainer: {
     padding: 10,
     borderColor: "#d1c2b8",
     borderBottomWidth: 0.5,
-    //marginLeft: 30,
-    //marginRight: 30,
   },
   totalContainer: {
     padding: 20,
