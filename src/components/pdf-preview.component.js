@@ -165,20 +165,19 @@ export default function PDFPreview() {
 
   const InvoiceItemsHeader = () => (
     <Box style={styles.itemsHeaderContainer}>
-      <Box style={styles.taskDirection}>
-        <Box>
+      <Box style={styles.flexDirection}>
+        <Box style={styles.taskFlex}>
           <Typography style={styles.subHeaderText}>TASK</Typography>
         </Box>
-        <Box style={styles.itemDirection}>
-          <Box>
-            <Typography style={styles.subHeaderText}>RATE</Typography>
-          </Box>
-          <Box>
-            <Typography style={styles.subHeaderText}>HOURS</Typography>
-          </Box>
-          <Box>
-            <Typography style={styles.subHeaderText}>TOTAL</Typography>
-          </Box>
+
+        <Box style={styles.rateFlex}>
+          <Typography style={styles.subHeaderText}>RATE</Typography>
+        </Box>
+        <Box style={styles.rateFlex}>
+          <Typography style={styles.subHeaderText}>HOURS</Typography>
+        </Box>
+        <Box style={styles.rateFlex}>
+          <Typography style={styles.subHeaderText}>TOTAL</Typography>
         </Box>
       </Box>
     </Box>
@@ -187,29 +186,47 @@ export default function PDFPreview() {
     itemsData.map((item) => (
       <Fragment key={item.itemNumber}>
         <Box style={styles.itemsContainer}>
-          <Box style={styles.taskDirection}>
-            <Box>
+          <Box style={styles.flexDirection}>
+            <Box style={styles.taskDirection}>
               <Typography style={styles.textSize}>
                 {item.itemDescription}
               </Typography>
             </Box>
-            <Box style={styles.itemDirection}>
-              <Box>
-                <Typography style={styles.subHeaderText}>RATE</Typography>
-              </Box>
-              <Box>
-                <Typography style={styles.subHeaderText}>
-                  {item.itemQuantity}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography style={styles.subHeaderText}>TOTAL</Typography>
-              </Box>
+            <Box style={styles.rateFlex}>
+              <Typography style={styles.textSize}>RATE</Typography>
+            </Box>
+            <Box style={styles.rateFlex}>
+              <Typography style={styles.textSize}>
+                {item.itemQuantity}
+              </Typography>
+            </Box>
+            <Box style={styles.rateFlex}>
+              <Typography style={styles.textSize}>R0.00</Typography>
             </Box>
           </Box>
         </Box>
       </Fragment>
     ));
+  const InvoiceTotal = () => (
+    <Box style={styles.totalContainer}>
+      <Box style={styles.totalDirection}>
+        <Typography style={styles.totalTextSize}>SUBTOTAL</Typography>
+        <Typography style={styles.totalRate}>R0.00</Typography>
+      </Box>
+      <Box>
+        <Typography style={styles.textSize}>TAX</Typography>
+      </Box>
+      <Box>
+        <Typography style={styles.textSize}>TOTAL</Typography>
+      </Box>
+      <Box>
+        <Typography style={styles.textSize}>DISCOUNT</Typography>
+      </Box>
+      <Box>
+        <Typography style={styles.textSize}>TOTAL DUE</Typography>
+      </Box>
+    </Box>
+  );
 
   return (
     <>
@@ -220,6 +237,7 @@ export default function PDFPreview() {
         <Box style={{ paddingLeft: 30, paddingRight: 30 }}>
           <InvoiceItemsHeader />
           <InvoiceItem />
+          <InvoiceTotal />
         </Box>
       </Box>
     </>
@@ -242,17 +260,27 @@ const styles = StyleSheet.create({
   },
   flexDirection: { display: "flex", width: "100%" },
   taskDirection: {
-    display: "flex",
-    width: "100%",
-    justifyContent: "space-between",
+    flex: 1.5,
   },
   itemDirection: {
+    flex: 0.5,
+  },
+  totalContainer: {
+    backgroundColor: "#d1c2b8",
+    padding: 5,
+    marginLeft: "50%",
+    marginTop: 5,
+    marginBottom: 5,
+    marginRight: 15,
+  },
+  totalDirection: {
     display: "flex",
-    width: "50%",
-    justifyContent: "space-between",
   },
   flex: { flex: 1 },
   textSize: { fontSize: 12 },
-  taskFlex: { flex: 2 },
+  totalTextSize: { fontSize: 12, flex: 2 },
+  totalRate: { fontSize: 12, flex: 0.8 },
+  subHeaderText: { fontSize: 14 },
+  taskFlex: { flex: 1.5 },
   rateFlex: { flex: 0.5 },
 });
