@@ -10,49 +10,12 @@ import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
 
 export default function InvoiceDetails() {
-  //cover and logo redux state
-  const logoImage = useSelector((state) => state.invoice.logoImage);
-
-  //heading redux state
-  const selectedCurrencyType = useSelector(
-    (state) => state.invoice.selectedCurrencyType
-  );
-  const selectedInvoiceType = useSelector(
-    (state) => state.invoice.selectedInvoiceType
-  );
-  const invoiceDate = useSelector((state) => state.invoice.invoiceDate);
-  const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
-  const billAddressData = useSelector((state) => state.invoice.billAddressData);
-  //items data redux state
-  const itemsData = useSelector((state) => state.invoice.itemsData);
-
-  const DownloadInvoice = () => (
-    <PDFDownloadLink
-      document={
-        <InvoiceDownloadSection
-          currencySymbol={selectedCurrencyType.symbol}
-          invoiceType={selectedInvoiceType.label}
-          invoiceDate={invoiceDate}
-          invoiceNumber={invoiceNumber}
-          billAddress={billAddressData}
-          items={itemsData}
-        />
-      }
-      fileName="invoice.pdf"
-    >
-      <Button variant="contained" color="primary">
-        Download
-      </Button>
-    </PDFDownloadLink>
-  );
-
   return (
     <>
       <HeadingSection />
       <ItemsSections />
       <PaymentSection />
       <NotesSection />
-      <DownloadInvoice />
     </>
   );
 }

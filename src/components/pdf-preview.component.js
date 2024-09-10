@@ -1,4 +1,12 @@
-import { Circle, FilePresent, FilePresentOutlined } from "@mui/icons-material";
+import {
+  Circle,
+  Download,
+  DownloadOutlined,
+  DownloadRounded,
+  FilePresent,
+  FilePresentOutlined,
+  FilePresentRounded,
+} from "@mui/icons-material";
 import {
   Box,
   Typography,
@@ -9,10 +17,12 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 import React, { useState } from "react";
 
 import { useSelector } from "react-redux";
+import InvoiceDownloadSection from "./invoice-download.component";
 
 export default function PDFPreview() {
   const coverImageUrl = useSelector((state) => state.invoice.coverImageUrl);
@@ -79,7 +89,13 @@ export default function PDFPreview() {
 
   return (
     <Box>
-      <Box p={1} bgcolor={"white"} boxShadow={"0px 0px 1px 0px gray"}>
+      <Box
+        p={1}
+        bgcolor={"white"}
+        boxShadow={"0px 0px 1px 0px gray"}
+        display={"flex"}
+        justifyContent={"space-between"}
+      >
         <Box display={"flex"} gap={1}>
           <input
             id="btn-change"
@@ -88,17 +104,35 @@ export default function PDFPreview() {
             onChange={upload}
           />
           <IconButton
-            color="inherit"
             size="small"
             sx={{ borderRadius: 2 }}
             onClick={() => document.getElementById("btn-change").click()}
           >
-            <FilePresentOutlined />
+            <FilePresentRounded />
           </IconButton>
           <Divider orientation="vertical" flexItem />
           <IconButton size="small" sx={{ borderRadius: 2 }}>
             <Circle sx={{ color: "#d1c2b8" }} />
           </IconButton>
+        </Box>
+        <Box>
+          <PDFDownloadLink
+            document={
+              <InvoiceDownloadSection
+                currencySymbol={selectedCurrencyType.symbol}
+                invoiceType={selectedInvoiceType.label}
+                invoiceDate={invoiceDate}
+                invoiceNumber={invoiceNumber}
+                billAddress={billAddressData}
+                items={itemsData}
+              />
+            }
+            fileName="invoice.pdf"
+          >
+            <IconButton size="small" sx={{ borderRadius: 2 }}>
+              <DownloadRounded />
+            </IconButton>
+          </PDFDownloadLink>
         </Box>
       </Box>
 
