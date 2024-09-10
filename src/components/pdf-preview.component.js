@@ -17,7 +17,7 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import { PDFDownloadLink, StyleSheet } from "@react-pdf/renderer";
 
 import React, { useState } from "react";
 
@@ -86,320 +86,139 @@ export default function PDFPreview() {
       console.log(result);
     });
   };
-
-  return (
-    <Box>
-      <Box
-        p={1}
-        bgcolor={"white"}
-        boxShadow={"0px 0px 1px 0px gray"}
-        display={"flex"}
-        justifyContent={"space-between"}
-      >
-        <Box display={"flex"} gap={1}>
-          <input
-            id="btn-change"
-            style={{ display: "none" }}
-            type="file"
-            onChange={upload}
-          />
-          <IconButton
-            size="small"
-            sx={{ borderRadius: 2 }}
-            onClick={() => document.getElementById("btn-change").click()}
-          >
-            <FilePresentRounded />
-          </IconButton>
-          <Divider orientation="vertical" flexItem />
+  const InvoiceMenuBar = () => (
+    <Box
+      p={1}
+      bgcolor={"white"}
+      boxShadow={"0px 0px 1px 0px gray"}
+      display={"flex"}
+      justifyContent={"space-between"}
+    >
+      <Box display={"flex"} gap={1}>
+        <input
+          id="btn-change"
+          style={{ display: "none" }}
+          type="file"
+          onChange={upload}
+        />
+        <IconButton
+          size="small"
+          sx={{ borderRadius: 2 }}
+          onClick={() => document.getElementById("btn-change").click()}
+        >
+          <FilePresentRounded />
+        </IconButton>
+        <Divider orientation="vertical" flexItem />
+        <IconButton size="small" sx={{ borderRadius: 2 }}>
+          <Circle sx={{ color: "#d1c2b8" }} />
+        </IconButton>
+      </Box>
+      <Box>
+        <PDFDownloadLink
+          document={
+            <InvoiceDownloadSection
+              currencySymbol={selectedCurrencyType.symbol}
+              invoiceType={selectedInvoiceType.label}
+              invoiceDate={invoiceDate}
+              invoiceNumber={invoiceNumber}
+              billAddress={billAddressData}
+              items={itemsData}
+            />
+          }
+          fileName="invoice.pdf"
+        >
           <IconButton size="small" sx={{ borderRadius: 2 }}>
-            <Circle sx={{ color: "#d1c2b8" }} />
+            <DownloadRounded />
           </IconButton>
+        </PDFDownloadLink>
+      </Box>
+    </Box>
+  );
+  const InvoiceHeader = () => (
+    <Box style={styles.headerContainer}>
+      <Typography>Company Name & Logo</Typography>
+    </Box>
+  );
+  const InvoiceHeading = () => (
+    <Box style={styles.contentContainer}>
+      <Box style={styles.flexDirection}>
+        <Box style={styles.flex}>
+          <Typography>BILLED TO:</Typography>
+          <Typography style={styles.textSize}>you</Typography>
         </Box>
-        <Box>
-          <PDFDownloadLink
-            document={
-              <InvoiceDownloadSection
-                currencySymbol={selectedCurrencyType.symbol}
-                invoiceType={selectedInvoiceType.label}
-                invoiceDate={invoiceDate}
-                invoiceNumber={invoiceNumber}
-                billAddress={billAddressData}
-                items={itemsData}
-              />
-            }
-            fileName="invoice.pdf"
-          >
-            <IconButton size="small" sx={{ borderRadius: 2 }}>
-              <DownloadRounded />
-            </IconButton>
-          </PDFDownloadLink>
+
+        <Box style={styles.flex}>
+          <Typography>
+            {selectedInvoiceType.label}: {invoiceNumber && `#${invoiceNumber}`}
+          </Typography>
+          <Typography style={styles.textSize}>
+            {new Date(invoiceDate).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </Typography>
         </Box>
       </Box>
+    </Box>
+  );
 
-      <Box
-        m={5}
-        bgcolor={"white"}
-        boxShadow={"1px 1px 10px 0px gray"}
-        borderRadius={0.5}
-        minHeight={550}
-      >
-        <img
-          src={coverImageUrl}
-          alt="img"
-          style={{
-            width: "100%",
-            height: 100,
-            borderTopLeftRadius: 2,
-            borderTopRightRadius: 2,
-          }}
-        />
-        <Box p={2}>
+  const InvoiceItemsHeader = () => (
+    <Box style={styles.itemsContainer}>
+      <Box style={styles.taskDirection}>
+        <Box>
+          <Typography style={styles.subHeaderText}>TASK</Typography>
+        </Box>
+        <Box style={styles.itemDirection}>
           <Box>
-            <Typography>
-              <b>{selectedInvoiceType.label}</b>
-            </Typography>
-
-            <Box>
-              {invoiceNumber !== "" ? (
-                <Box display={"flex"} justifyContent={"space-between"}>
-                  <Typography style={{ fontSize: 10 }}>
-                    #{invoiceNumber} •{" "}
-                    {new Date(invoiceDate).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </Typography>
-                  {logoImage !== "" ? (
-                    <img src={logoImage} alt="img" style={{ width: 30 }} />
-                  ) : (
-                    <></>
-                  )}
-                </Box>
-              ) : (
-                <Typography style={{ fontSize: 10 }}>
-                  {invoiceNumber} •{" "}
-                  {new Date(invoiceDate).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </Typography>
-              )}
-            </Box>
+            <Typography style={styles.subHeaderText}>RATE</Typography>
           </Box>
-          <Grid container mt={2}>
-            <Grid item lg={6}>
-              <Typography style={{ fontSize: 10, color: "gray" }}>
-                From:
-              </Typography>
-              <Box width={"18ch"}>
-                <Typography style={{ fontSize: 10, wordWrap: "break-word" }}>
-                  {billAddressData.fromAddress}
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item lg={6}>
-              <Typography style={{ fontSize: 10, color: "gray" }}>
-                Bill To:
-              </Typography>
-              <Box width={"18ch"}>
-                <Typography style={{ fontSize: 10, wordWrap: "break-word" }}>
-                  {billAddressData.toAddress}
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-          <Box mt={3}>
-            <Box
-              display={"flex"}
-              justifyContent={"space-around"}
-              bgcolor={"#f1f1f1"}
-              borderRadius={1}
-            >
-              <Typography style={{ fontSize: 10 }}>Items</Typography>
-              <Typography style={{ fontSize: 10 }}>Qty</Typography>
-              <Typography style={{ fontSize: 10 }}>Rate</Typography>
-            </Box>
-            {itemsData.length > 0 &&
-              itemsData.map((item) => (
-                <Box key={item.itemNumber}>
-                  <Grid
-                    container
-                    key={item.itemNumber}
-                    style={{ marginTop: 4, marginBottom: 4 }}
-                  >
-                    <Grid item lg={6} width={"20ch"}>
-                      <Typography
-                        style={{ fontSize: 10, wordWrap: "break-word" }}
-                      >
-                        {item.itemDescription}
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3}>
-                      <Typography
-                        style={{ fontSize: 10, wordWrap: "break-word" }}
-                      >
-                        {item.itemQuantity}
-                      </Typography>
-                    </Grid>
-                    <Grid item lg={3}>
-                      <Typography
-                        style={{
-                          fontSize: 10,
-                          wordWrap: "break-word",
-                          direction: "rtl",
-                        }}
-                      >
-                        {selectedCurrencyType.symbol}
-                        {parseFloat(item.itemRate).toFixed(2)}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Divider />
-                </Box>
-              ))}
-          </Box>
-          <Grid container>
-            <Grid item lg={6} mt={5}>
-              {bankingDetails !== "" ? (
-                <Box width={"20ch"}>
-                  <Typography style={{ fontSize: 10, color: "gray" }}>
-                    Bank Transfer:
-                  </Typography>
-                  <Typography
-                    style={{
-                      fontSize: 10,
-                      wordWrap: "break-word",
-                      whiteSpace: "pre-line",
-                    }}
-                  >
-                    {`${bankingDetails}`}
-                  </Typography>
-                </Box>
-              ) : (
-                <></>
-              )}
-            </Grid>
-            <Grid item lg={6}>
-              <Box
-                display={"flex"}
-                mt={0.5}
-                mb={0.5}
-                justifyContent={"space-between"}
-              >
-                <Typography
-                  style={{
-                    fontSize: 10,
-                  }}
-                >
-                  Subtotal:
-                </Typography>
-                <Box>
-                  <Typography
-                    style={{
-                      fontSize: 10,
-                    }}
-                  >
-                    {selectedCurrencyType.symbol}
-                    {parseFloat(invoiceSubtotal).toFixed(2)}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box>
-                <Divider />
-              </Box>
-              <Box
-                display={"flex"}
-                mt={0.5}
-                mb={0.5}
-                justifyContent={"space-between"}
-              >
-                <Typography style={{ fontSize: 10 }}>Tax:</Typography>
-                <Typography style={{ fontSize: 10 }}>
-                  {selectedCurrencyType.symbol}
-                  {parseFloat(invoiceTax).toFixed(2)}
-                </Typography>
-              </Box>
-              <Divider />
-              <Box
-                display={"flex"}
-                mt={0.5}
-                mb={0.5}
-                justifyContent={"space-between"}
-              >
-                <Typography
-                  style={{
-                    fontSize: 10,
-                  }}
-                >
-                  Total:
-                </Typography>
-                <Typography style={{ fontSize: 10 }}>
-                  {selectedCurrencyType.symbol}
-                  {parseFloat(invoiceTotal).toFixed(2)}
-                </Typography>
-              </Box>
-              <Divider />
-              {discount === 0 ? (
-                <></>
-              ) : (
-                <>
-                  <Box
-                    display={"flex"}
-                    mt={0.5}
-                    mb={0.5}
-                    justifyContent={"space-between"}
-                  >
-                    <Typography
-                      style={{
-                        fontSize: 10,
-                      }}
-                    >
-                      Discount:
-                    </Typography>
-
-                    <Typography style={{ fontSize: 10 }}>
-                      {selectedCurrencyType.symbol}
-                      {parseFloat(invoiceDiscount).toFixed(2)}
-                    </Typography>
-                  </Box>
-                  <Divider />
-                </>
-              )}
-
-              <Box
-                display={"flex"}
-                mt={0.5}
-                mb={0.5}
-                justifyContent={"space-between"}
-              >
-                <Typography
-                  style={{
-                    fontSize: 10,
-                  }}
-                >
-                  Balance Due:
-                </Typography>
-                <Typography style={{ fontSize: 13 }}>
-                  {selectedCurrencyType.symbol}
-                  {parseFloat(invoiceBalanceDue).toFixed(2)}
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
           <Box>
-            <Typography style={{ fontSize: 10, color: "gray" }}>
-              Memo:
-            </Typography>
-            <Box width={"20ch"}>
-              <Typography style={{ fontSize: 10, wordWrap: "break-word" }}>
-                {memo}
-              </Typography>
-            </Box>
+            <Typography style={styles.subHeaderText}>HOURS</Typography>
+          </Box>
+          <Box>
+            <Typography style={styles.subHeaderText}>TOTAL</Typography>
           </Box>
         </Box>
       </Box>
     </Box>
   );
+
+  return (
+    <>
+      <InvoiceMenuBar />
+      <Box margin={5} bgcolor={"white"}>
+        <InvoiceHeader />
+        <InvoiceHeading />
+        <Box style={{ paddingLeft: 30, paddingRight: 30 }}>
+          <InvoiceItemsHeader />
+        </Box>
+      </Box>
+    </>
+  );
 }
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    flexDirection: "row",
+    padding: 30,
+    backgroundColor: "#d1c2b8",
+  },
+  contentContainer: { padding: 30 },
+  itemsContainer: { backgroundColor: "#d1c2b8", padding: 5 },
+  flexDirection: { display: "flex", width: "100%" },
+  taskDirection: {
+    display: "flex",
+    width: "100%",
+    justifyContent: "space-between",
+  },
+  itemDirection: {
+    display: "flex",
+    width: "50%",
+    justifyContent: "space-between",
+  },
+  flex: { flex: 1 },
+  textSize: { fontSize: 10 },
+  taskFlex: { flex: 2 },
+  rateFlex: { flex: 0.5 },
+});
