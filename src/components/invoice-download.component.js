@@ -9,8 +9,16 @@ import {
   G,
   Polygon,
   Rect,
+  Font,
 } from "@react-pdf/renderer";
 import { Grid } from "@mui/material";
+
+Font.register({
+  family: "Roboto",
+  src: "https://fonts.gstatic.com/s/roboto/v16/zN7GBFwfMP4uA6AR0HCoLQ.ttf",
+  fontStyle: "normal",
+  fontWeight: 700,
+});
 
 export default function InvoiceDownloadSection({
   logoImage,
@@ -88,7 +96,7 @@ export default function InvoiceDownloadSection({
             <View style={styles.rate}>
               <Text style={styles.text}>
                 {currencySymbol}
-                {item.itemRate}
+                {parseFloat(item.itemRate).toFixed(2)}
               </Text>
             </View>
           </View>
@@ -131,40 +139,42 @@ export default function InvoiceDownloadSection({
             <Text style={styles.total}>SUBTOTAL</Text>
             <Text style={styles.price}>
               {currencySymbol}
-              {invoiceSubtotal}
+              {parseFloat(invoiceSubtotal).toFixed(2)}
             </Text>
           </View>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
             <Text style={styles.total}>TAX</Text>
             <Text style={styles.price}>
               {currencySymbol}
-              {invoiceTax}
+              {parseFloat(invoiceTax).toFixed(2)}
             </Text>
           </View>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
             <Text style={styles.total}>TOTAL</Text>
             <Text style={styles.price}>
               {currencySymbol}
-              {invoiceTotal}
+              {parseFloat(invoiceTotal).toFixed(2)}
             </Text>
           </View>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
             <Text style={styles.total}>DISCOUNT</Text>
             <Text style={styles.price}>
               {currencySymbol}
-              {invoiceTotal}
+              {parseFloat(invoiceTotal).toFixed(2)}
             </Text>
           </View>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
-            <Text style={styles.totalDue}>TOTAL DUE</Text>
+            <Text style={[styles.totalDue]}>TOTAL DUE</Text>
             <Text style={styles.priceDue}>
               {currencySymbol}
-              {invoiceTotal}
+              {parseFloat(invoiceTotal).toFixed(2)}
             </Text>
           </View>
         </View>
         <View style={{ marginLeft: "50%" }}>
-          <Text style={styles.text}>Thank you for your business!</Text>
+          <Text style={[styles.text, { fontWeight: "bold" }]}>
+            Thank you for your business!
+          </Text>
         </View>
       </View>
     );
@@ -182,9 +192,6 @@ export default function InvoiceDownloadSection({
         backgroundColor: "#d1c2b8",
         width: "100%",
         padding: 10,
-        //marginLeft: 30,
-        //marginRight: 30,
-        //marginBottom: 30,
       }}
     >
       <View
@@ -249,11 +256,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#d1c2b8",
   },
   padding: { padding: 50 },
-  invoiceTypeFontSize: { fontSize: 24, fontWeight: "normal" },
+  invoiceTypeFontSize: {
+    fontSize: 24,
+    fontFamily: "Roboto",
+    fontWeight: "normal",
+  },
   marginTop: { marginTop: 5 },
   addressContainer: { paddingTop: 20, paddingBottom: 20, marginLeft: 30 },
   billAddress: { flex: 1 },
-  invoiceNumber: { flex: 1 },
+  invoiceNumber: { flex: 1.1 },
 
   flex: { flexDirection: "row", width: "100%" },
 
@@ -263,8 +274,9 @@ const styles = StyleSheet.create({
     left: 10,
   },
   headerText: {
+    fontFamily: "Roboto",
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: "normal",
     color: "#333",
   },
   subHeaderText: {
@@ -281,10 +293,15 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: "#333",
   },
-  total: { fontSize: 10, flex: 2 },
-  totalDue: { fontSize: 10, flex: 2, fontWeight: "bold" },
-  price: { fontSize: 10, flex: 1.4 },
-  priceDue: { fontSize: 10, flex: 1.4, fontWeight: "bold" },
+  total: {
+    fontFamily: "Courier-Bold",
+    fontWeight: "bold",
+    fontSize: 10,
+    flex: 2,
+  },
+  totalDue: { fontSize: 10, flex: 2 },
+  price: { fontSize: 10, flex: 0.9 },
+  priceDue: { fontSize: 10, flex: 0.9, fontWeight: "bold" },
   itemsHeaderContainer: {
     padding: 10,
     backgroundColor: "#d1c2b8",
@@ -302,7 +319,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   totalsContainer: {
-    //padding: 20,
     backgroundColor: "#d1c2b8",
   },
   taskDescription: { flex: 1.5 },
@@ -312,8 +328,7 @@ const styles = StyleSheet.create({
   memoContainer: {
     padding: 10,
     backgroundColor: "#d1c2b8",
-    width: "45%",
+    width: "50%",
     marginTop: 20,
-    //marginLeft: 30,
   },
 });
