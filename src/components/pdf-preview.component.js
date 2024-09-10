@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { PDFDownloadLink, StyleSheet } from "@react-pdf/renderer";
 
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 
 import { useSelector } from "react-redux";
 import InvoiceDownloadSection from "./invoice-download.component";
@@ -164,7 +164,7 @@ export default function PDFPreview() {
   );
 
   const InvoiceItemsHeader = () => (
-    <Box style={styles.itemsContainer}>
+    <Box style={styles.itemsHeaderContainer}>
       <Box style={styles.taskDirection}>
         <Box>
           <Typography style={styles.subHeaderText}>TASK</Typography>
@@ -183,6 +183,33 @@ export default function PDFPreview() {
       </Box>
     </Box>
   );
+  const InvoiceItem = () =>
+    itemsData.map((item) => (
+      <Fragment key={item.itemNumber}>
+        <Box style={styles.itemsContainer}>
+          <Box style={styles.taskDirection}>
+            <Box>
+              <Typography style={styles.textSize}>
+                {item.itemDescription}
+              </Typography>
+            </Box>
+            <Box style={styles.itemDirection}>
+              <Box>
+                <Typography style={styles.subHeaderText}>RATE</Typography>
+              </Box>
+              <Box>
+                <Typography style={styles.subHeaderText}>
+                  {item.itemQuantity}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography style={styles.subHeaderText}>TOTAL</Typography>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Fragment>
+    ));
 
   return (
     <>
@@ -192,6 +219,7 @@ export default function PDFPreview() {
         <InvoiceHeading />
         <Box style={{ paddingLeft: 30, paddingRight: 30 }}>
           <InvoiceItemsHeader />
+          <InvoiceItem />
         </Box>
       </Box>
     </>
@@ -205,7 +233,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#d1c2b8",
   },
   contentContainer: { padding: 30 },
-  itemsContainer: { backgroundColor: "#d1c2b8", padding: 5 },
+  itemsHeaderContainer: { backgroundColor: "#d1c2b8", padding: 5 },
+  itemsContainer: {
+    padding: 5,
+    borderBottomStyle: "solid",
+    borderBottomWidth: 0.5,
+    borderColor: "#d1c2b8",
+  },
   flexDirection: { display: "flex", width: "100%" },
   taskDirection: {
     display: "flex",
@@ -218,7 +252,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   flex: { flex: 1 },
-  textSize: { fontSize: 10 },
+  textSize: { fontSize: 12 },
   taskFlex: { flex: 2 },
   rateFlex: { flex: 0.5 },
 });
