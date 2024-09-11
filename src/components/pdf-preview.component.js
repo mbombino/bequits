@@ -6,6 +6,8 @@ import {
   FilePresent,
   FilePresentOutlined,
   FilePresentRounded,
+  Height,
+  HomeRepairServiceOutlined,
 } from "@mui/icons-material";
 import {
   Box,
@@ -16,6 +18,10 @@ import {
   Toolbar,
   Button,
   IconButton,
+  Container,
+  BottomNavigation,
+  BottomNavigationAction,
+  Paper,
 } from "@mui/material";
 import { PDFDownloadLink, StyleSheet } from "@react-pdf/renderer";
 
@@ -140,15 +146,15 @@ export default function PDFPreview() {
     </Box>
   );
   const InvoiceHeading = () => (
-    <Box style={styles.contentContainer}>
-      <Box style={styles.flexDirection}>
-        <Box style={styles.flex}>
-          <Typography>BILLED TO:</Typography>
+    <Box sx={styles.contentContainer}>
+      <Box sx={styles.flexDirection}>
+        <Box sx={styles.flex}>
+          <Typography style={styles.subHeaderText}>BILLED TO:</Typography>
           <Typography style={styles.textSize}>you</Typography>
         </Box>
 
         <Box style={styles.flex}>
-          <Typography>
+          <Typography style={styles.subHeaderText}>
             {selectedInvoiceType.label}: {invoiceNumber && `#${invoiceNumber}`}
           </Typography>
           <Typography style={styles.textSize}>
@@ -185,22 +191,22 @@ export default function PDFPreview() {
   const InvoiceItem = () =>
     itemsData.map((item) => (
       <Fragment key={item.itemNumber}>
-        <Box style={styles.itemsContainer}>
-          <Box style={styles.flexDirection}>
-            <Box style={styles.taskDirection}>
+        <Box sx={styles.itemsContainer}>
+          <Box sx={styles.flexDirection}>
+            <Box sx={styles.taskDirection}>
               <Typography style={styles.textSize}>
                 {item.itemDescription}
               </Typography>
             </Box>
-            <Box style={styles.rateFlex}>
+            <Box sx={styles.rateFlex}>
               <Typography style={styles.textSize}>RATE</Typography>
             </Box>
-            <Box style={styles.rateFlex}>
+            <Box sx={styles.rateFlex}>
               <Typography style={styles.textSize}>
                 {item.itemQuantity}
               </Typography>
             </Box>
-            <Box style={styles.rateFlex}>
+            <Box sx={styles.rateFlex}>
               <Typography style={styles.textSize}>R0.00</Typography>
             </Box>
           </Box>
@@ -208,8 +214,8 @@ export default function PDFPreview() {
       </Fragment>
     ));
   const InvoiceTotal = () => (
-    <Box style={styles.totalContainer}>
-      <Box style={styles.totalDirection}>
+    <Box sx={styles.totalContainer}>
+      <Box sx={styles.totalDirection}>
         <Typography style={styles.totalTextSize}>SUBTOTAL</Typography>
         <Typography style={styles.totalRate}>R0.00</Typography>
       </Box>
@@ -228,30 +234,65 @@ export default function PDFPreview() {
     </Box>
   );
   const InvoiceMemo = () => (
-    <Box style={{ marginLeft: "50%" }}>
+    <Box sx={{ marginLeft: "50%" }}>
       <Typography style={{ fontSize: 10 }}>
         Thank you for your business!
       </Typography>
     </Box>
   );
   const InvoicePayment = () => (
-    <Box style={styles.paymentContainer}>
-      <Typography style={styles.subHeaderText}>PAYMENT INFORMATION</Typography>
+    <Box sx={styles.paymentContainer}>
+      <Typography style={styles.totalTextSize}>PAYMENT INFORMATION</Typography>
+    </Box>
+  );
+
+  //will make a gist
+  const InvoiceFooter = () => (
+    <Box
+      sx={{
+        backgroundColor: "#d1c2b8",
+        padding: 1,
+        marginTop: "auto",
+      }}
+    >
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography style={styles.textSize}>Company name</Typography>
+        <Typography style={styles.textSize}>Cell number</Typography>
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography style={styles.textSize}>Company address</Typography>
+        <Typography style={styles.textSize}>Email address</Typography>
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography style={styles.textSize}>Company city</Typography>
+        <Typography style={styles.textSize}>Website</Typography>
+      </Box>
     </Box>
   );
 
   return (
     <>
       <InvoiceMenuBar />
-      <Box margin={5} bgcolor={"white"}>
+      <Box bgcolor={"white"} sx={{ margin: 3, height: 600 }}>
         <InvoiceHeader />
         <InvoiceHeading />
-        <Box style={{ paddingLeft: 30, paddingRight: 30 }}>
+        <Box
+          component={"main"}
+          sx={{
+            backgroundColor: "#faf6f5",
+            marginLeft: 3,
+            marginRight: 3,
+            height: 450,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <InvoiceItemsHeader />
           <InvoiceItem />
           <InvoiceTotal />
           <InvoiceMemo />
           <InvoicePayment />
+          <InvoiceFooter />
         </Box>
       </Box>
     </>
@@ -264,19 +305,22 @@ const styles = StyleSheet.create({
     padding: 30,
     backgroundColor: "#d1c2b8",
   },
-  contentContainer: { padding: 30 },
-  itemsHeaderContainer: { backgroundColor: "#d1c2b8", padding: 5 },
+  contentContainer: { paddingLeft: 3, paddingRight: 3, margin: 0.5 },
+  itemsHeaderContainer: {
+    backgroundColor: "#d1c2b8",
+    padding: 2,
+  },
   itemsContainer: {
-    padding: 5,
+    padding: 0.5,
     borderBottomStyle: "solid",
     borderBottomWidth: 0.5,
     borderColor: "#d1c2b8",
   },
   paymentContainer: {
-    padding: 5,
+    padding: 0.5,
     backgroundColor: "#d1c2b8",
     width: "50%",
-    marginTop: 5,
+    marginTop: 1,
   },
   flexDirection: { display: "flex", width: "100%" },
   taskDirection: {
@@ -287,20 +331,20 @@ const styles = StyleSheet.create({
   },
   totalContainer: {
     backgroundColor: "#d1c2b8",
-    padding: 5,
+    padding: 1,
     marginLeft: "50%",
-    marginTop: 5,
-    marginBottom: 5,
-    marginRight: 15,
+    marginTop: 1,
+    marginBottom: 1,
+    marginRight: 2,
   },
   totalDirection: {
     display: "flex",
   },
   flex: { flex: 1 },
-  textSize: { fontSize: 12 },
-  totalTextSize: { fontSize: 12, flex: 2 },
-  totalRate: { fontSize: 12, flex: 0.8 },
-  subHeaderText: { fontSize: 14 },
+  textSize: { fontSize: 10 },
+  totalTextSize: { fontSize: 10, flex: 2 },
+  totalRate: { fontSize: 10, flex: 0.8 },
+  subHeaderText: { fontSize: 11 },
   taskFlex: { flex: 1.5 },
   rateFlex: { flex: 0.5 },
 });
