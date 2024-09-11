@@ -175,13 +175,26 @@ export default function PDFPreview() {
         <Box style={styles.taskFlex}>
           <Typography style={styles.subHeaderText}>TASK</Typography>
         </Box>
+        {selectedCurrencyType.label === "Hourly rate" ? (
+          <>
+            <Box style={styles.rateFlex}>
+              <Typography style={styles.subHeaderText}>RATE</Typography>
+            </Box>
+            <Box style={styles.rateFlex}>
+              <Typography style={styles.subHeaderText}>HOURS</Typography>
+            </Box>
+          </>
+        ) : (
+          <>
+            <Box style={styles.rateFlex}>
+              <Typography style={styles.subHeaderText}>QTY</Typography>
+            </Box>
+            <Box style={styles.rateFlex}>
+              <Typography style={styles.subHeaderText}>RATE</Typography>
+            </Box>
+          </>
+        )}
 
-        <Box style={styles.rateFlex}>
-          <Typography style={styles.subHeaderText}>RATE</Typography>
-        </Box>
-        <Box style={styles.rateFlex}>
-          <Typography style={styles.subHeaderText}>HOURS</Typography>
-        </Box>
         <Box style={styles.rateFlex}>
           <Typography style={styles.subHeaderText}>TOTAL</Typography>
         </Box>
@@ -198,16 +211,34 @@ export default function PDFPreview() {
                 {item.itemDescription}
               </Typography>
             </Box>
+            {selectedCurrencyType.label === "Hourly rate" ? (
+              <>
+                <Box sx={styles.rateFlex}>
+                  <Typography style={styles.textSize}>
+                    R{parseFloat(item.itemHourRate).toFixed(2)}/hr
+                  </Typography>
+                </Box>
+                <Box sx={styles.rateFlex}>
+                  <Typography style={styles.textSize}>
+                    {item.itemHour}
+                  </Typography>
+                </Box>
+              </>
+            ) : (
+              <>
+                <Box sx={styles.rateFlex}>
+                  <Typography style={styles.textSize}>
+                    {item.itemQuantity}
+                  </Typography>
+                </Box>
+                <Box sx={styles.rateFlex}>
+                  <Typography style={styles.textSize}>
+                    R{parseFloat(item.itemRate).toFixed(2)}
+                  </Typography>
+                </Box>
+              </>
+            )}
 
-            <Box sx={styles.rateFlex}>
-              <Typography style={styles.textSize}>RATE/hr</Typography>
-            </Box>
-
-            <Box sx={styles.rateFlex}>
-              <Typography style={styles.textSize}>
-                {item.itemQuantity}
-              </Typography>
-            </Box>
             <Box sx={styles.rateFlex}>
               <Typography style={styles.textSize}>R0.00</Typography>
             </Box>
