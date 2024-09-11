@@ -227,6 +227,18 @@ export default function PDFPreview() {
       </Box>
     </Box>
   );
+  const InvoiceMemo = () => (
+    <Box style={{ marginLeft: "50%" }}>
+      <Typography style={{ fontSize: 10 }}>
+        Thank you for your business!
+      </Typography>
+    </Box>
+  );
+  const InvoicePayment = () => (
+    <Box style={styles.paymentContainer}>
+      <Typography style={styles.subHeaderText}>PAYMENT INFORMATION</Typography>
+    </Box>
+  );
 
   return (
     <>
@@ -238,6 +250,8 @@ export default function PDFPreview() {
           <InvoiceItemsHeader />
           <InvoiceItem />
           <InvoiceTotal />
+          <InvoiceMemo />
+          <InvoicePayment />
         </Box>
       </Box>
     </>
@@ -257,6 +271,12 @@ const styles = StyleSheet.create({
     borderBottomStyle: "solid",
     borderBottomWidth: 0.5,
     borderColor: "#d1c2b8",
+  },
+  paymentContainer: {
+    padding: 5,
+    backgroundColor: "#d1c2b8",
+    width: "50%",
+    marginTop: 5,
   },
   flexDirection: { display: "flex", width: "100%" },
   taskDirection: {
