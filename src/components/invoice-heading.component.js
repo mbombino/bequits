@@ -107,7 +107,7 @@ export default function HeadingSection() {
           <TextField
             variant="outlined"
             select
-            defaultValue="ZAR"
+            defaultValue={1}
             size="small"
             onChange={(event) => handleCurrencyTypeSelection(event)}
           >

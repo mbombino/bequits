@@ -6,24 +6,12 @@ export const invoiceSlice = createSlice({
     //invoice details
     currencyTypes: [
       {
-        value: "USD",
-        label: "USD ($)",
-        symbol: "$",
+        value: 1,
+        label: "Hourly rate",
       },
       {
-        value: "EUR",
-        label: "EUR€",
-        symbol: "€",
-      },
-      {
-        value: "ZAR",
-        label: "ZAR (R)",
-        symbol: "R",
-      },
-      {
-        value: "JPY",
-        label: "JPY (¥)",
-        symbol: "¥",
+        value: 2,
+        label: "Quantity rate",
       },
     ],
     invoiceTypes: [
@@ -43,7 +31,7 @@ export const invoiceSlice = createSlice({
     coverImageUrl:
       "http://localhost:8080/files/jr-korpa-jrOJ35Rtkz0-unsplash.jpg",
     logoImage: "",
-    selectedCurrencyType: { value: "ZAR", label: "ZAR (R)", symbol: "R" },
+    selectedCurrencyType: { value: 1, label: "Hourly rate" },
     selectedInvoiceType: { value: 1, label: "Invoice" },
     invoiceDate: new Date().toDateString(),
     invoiceNumber: "001",

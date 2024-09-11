@@ -186,8 +186,8 @@ export default function ItemsSections() {
         borderRadius={1}
       >
         <Typography>Items</Typography>
-        <Typography>Qty</Typography>
         <Typography>Rate</Typography>
+        <Typography>Hours</Typography>
       </Box>
 
       {itemsData.map((item, index) => {
@@ -211,7 +211,7 @@ export default function ItemsSections() {
             <Box
               component="form"
               sx={{
-                "& .MuiTextField-root": { ml: 1, mt: 2, width: "8ch" },
+                "& .MuiTextField-root": { ml: 1, mt: 2, width: "14ch" },
               }}
               noValidate
               autoComplete="off"
@@ -226,7 +226,7 @@ export default function ItemsSections() {
             <Box
               component="form"
               sx={{
-                "& .MuiTextField-root": { ml: 1, mt: 2, width: "14ch" },
+                "& .MuiTextField-root": { ml: 1, mt: 2, width: "8ch" },
               }}
               noValidate
               autoComplete="off"
