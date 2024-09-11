@@ -51,10 +51,16 @@ export default function PDFPreview() {
   const memo = useSelector((state) => state.invoice.memo);
   const bankingDetails = useSelector((state) => state.invoice.bankingDetails);
 
-  const invoiceSubtotal = itemsData.reduce(
-    (total, item) => total + item.itemQuantity * item.itemRate,
-    0
-  );
+  const invoiceTotal =
+    selectedCurrencyType.label === "Hourly rate"
+      ? itemsData.reduce(
+          (total, item) => total + item.itemHourRate * item.itemHour,
+          0
+        )
+      : itemsData.reduce(
+          (total, item) => total + item.itemQuantity * item.itemRate,
+          0
+        );
 
   const invoiceTax = itemsData.reduce(
     (total, item) =>
@@ -62,7 +68,7 @@ export default function PDFPreview() {
     0
   );
 
-  const invoiceTotal = invoiceSubtotal + invoiceTax;
+  //const invoiceTotalDue = invoiceSubtotal + invoiceTax;
 
   const invoiceDiscount =
     selectedDiscountType === "percent"
@@ -240,7 +246,9 @@ export default function PDFPreview() {
             )}
 
             <Box sx={styles.rateFlex}>
-              <Typography style={styles.textSize}>R0.00</Typography>
+              <Typography style={styles.textSize}>
+                R{parseFloat(invoiceTotal).toFixed(2)}
+              </Typography>
             </Box>
           </Box>
         </Box>
