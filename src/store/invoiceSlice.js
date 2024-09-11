@@ -40,9 +40,13 @@ export const invoiceSlice = createSlice({
       {
         itemNumber: Date.now().toString(32) + Math.random().toString(16),
         itemDescription: "",
+        itemHour: 1,
         itemQuantity: 1,
+        itemHourRate: 0,
         itemRate: 0,
         itemRatePrefix: "",
+        itemHourRatePrefix: "",
+        itemHourRateSuffix: "",
         itemTax: 0,
       },
     ],

@@ -25,6 +25,7 @@ export default function HeadingSection() {
   const invoiceDate = useSelector((state) => state.invoice.invoiceDate);
   const invoiceNumber = useSelector((state) => state.invoice.invoiceNumber);
   const billAddressData = useSelector((state) => state.invoice.billAddressData);
+  const itemsData = useSelector((state) => state.invoice.itemsData);
 
   //redux dispatch
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ export default function HeadingSection() {
       (e) => e.value === event.target.value
     );
     dispatch(setSelectedCurrencyType(currencyType));
+    //console.log(itemsData);
   };
 
   //invoice type functions

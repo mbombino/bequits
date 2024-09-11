@@ -66,28 +66,25 @@ export default function ItemsSections() {
 
   //digit check functions
 
-  const handleCheckQuantityDigit = (event, { item }) => {
-    const { value, selectionStart } = document.getElementById(
-      item.itemNumber + ".qty-input"
-    );
+  const handleCheckQuantityDigit = (event) => {
+    const id = event.target.id;
+    const { value, selectionStart } = document.getElementById(id);
     const keyCode = event.keyCode;
     const key = event.key;
     checkDigit(keyCode, key, selectionStart, value, event);
   };
 
-  const handleCheckRateDigit = (event, { item }) => {
-    const { value, selectionStart } = document.getElementById(
-      item.itemNumber + ".rate-input"
-    );
+  const handleCheckRateDigit = (event) => {
+    const id = event.target.id;
+    const { value, selectionStart } = document.getElementById(id);
     const keyCode = event.keyCode;
     const key = event.key;
     checkRateDigit(keyCode, key, selectionStart, value, event);
   };
 
-  const handleCheckTaxDigit = (event, { item }) => {
-    const { value, selectionStart } = document.getElementById(
-      item.itemNumber + ".tax-input"
-    );
+  const handleCheckTaxDigit = (event) => {
+    const id = event.target.id;
+    const { value, selectionStart } = document.getElementById(id);
     const keyCode = event.keyCode;
     const key = event.key;
     checkRateDigit(keyCode, key, selectionStart, value, event);
@@ -102,7 +99,11 @@ export default function ItemsSections() {
       itemDescription: "",
       itemQuantity: 1,
       itemRate: 0,
+      itemHour: 1,
+      itemHourRate: 0,
       itemRatePrefix: "",
+      itemHourRatePrefix: "",
+      itemHourRateSuffix: "",
       itemTax: 0,
     };
 
@@ -123,13 +124,13 @@ export default function ItemsSections() {
   //edit item quantity functions
 
   const handleEditItemQuantity = (event, { item }) => {
-    const { value, selectionStart } = document.getElementById(
-      item.itemNumber + ".qty-input"
-    );
-    checkPrecedingZero(selectionStart, value, item.itemNumber + ".qty-input");
+    const id = event.target.id;
+    const { value, selectionStart } = document.getElementById(id);
+    checkPrecedingZero(selectionStart, value, id);
     const itemToEdit = {
       ...item,
-      itemQuantity: event.target.value,
+      [id.includes("hour-input") ? "itemHour" : "itemQuantity"]:
+        event.target.value,
     };
     dispatch(setEditItemsData(itemToEdit));
   };
@@ -137,29 +138,31 @@ export default function ItemsSections() {
   //edit item rate functions
 
   const handleEditItemRate = (event, { item }) => {
-    const { value, selectionStart } = document.getElementById(
-      item.itemNumber + ".rate-input"
-    );
-    checkPrecedingZero(selectionStart, value, item.itemNumber + ".rate-input");
+    const id = event.target.id;
+    const { value, selectionStart } = document.getElementById(id);
+    checkPrecedingZero(selectionStart, value, id);
 
     const newRate = event.target.value;
-    const textFieldPrefix = newRate !== "" ? selectedCurrencyType.symbol : "";
+    const isHourlyRate = id.includes("hour-rate-input");
+    const textFieldPrefix = newRate ? "R" : "";
+    const textFieldSuffix = isHourlyRate && newRate ? "/hr" : "";
 
     const itemToEdit = {
       ...item,
-      itemRatePrefix: textFieldPrefix,
-      itemRate: newRate !== "" ? parseFloat(newRate).toFixed(2) : 0,
+      [isHourlyRate ? "itemHourRatePrefix" : "itemRatePrefix"]: textFieldPrefix,
+      itemHourRateSuffix: textFieldSuffix,
+      [isHourlyRate ? "itemHourRate" : "itemRate"]: newRate,
     };
+
     dispatch(setEditItemsData(itemToEdit));
   };
 
   //edit item tax functions
 
   const handleEditItemTax = (event, { item }) => {
-    const { value, selectionStart } = document.getElementById(
-      item.itemNumber + ".tax-input"
-    );
-    checkPrecedingZero(selectionStart, value, item.itemNumber + ".tax-input");
+    const id = event.target.id;
+    const { value, selectionStart } = document.getElementById(id);
+    checkPrecedingZero(selectionStart, value, id);
     const itemToEdit = {
       ...item,
       itemTax: event.target.value !== "" ? event.target.value : 0,
@@ -185,9 +188,19 @@ export default function ItemsSections() {
         bgcolor={"#f1f1f1"}
         borderRadius={1}
       >
-        <Typography>Items</Typography>
-        <Typography>Rate</Typography>
-        <Typography>Hours</Typography>
+        {selectedCurrencyType.label === "Hourly rate" ? (
+          <>
+            <Typography>Items</Typography>
+            <Typography>Rate</Typography>
+            <Typography>Hours</Typography>
+          </>
+        ) : (
+          <>
+            <Typography>Items</Typography>
+            <Typography>Qty</Typography>
+            <Typography>Rate</Typography>
+          </>
+        )}
       </Box>
 
       {itemsData.map((item, index) => {
@@ -208,45 +221,101 @@ export default function ItemsSections() {
                 onChange={(event) => handleEditItemDescription(event, { item })}
               ></TextField>
             </Box>
-            <Box
-              component="form"
-              sx={{
-                "& .MuiTextField-root": { ml: 1, mt: 2, width: "14ch" },
-              }}
-              noValidate
-              autoComplete="off"
-            >
-              <TextField
-                id={item.itemNumber + ".qty-input"}
-                onKeyDown={(event) => handleCheckQuantityDigit(event, { item })}
-                defaultValue={item.itemQuantity}
-                onChange={(event) => handleEditItemQuantity(event, { item })}
-              ></TextField>
-            </Box>
-            <Box
-              component="form"
-              sx={{
-                "& .MuiTextField-root": { ml: 1, mt: 2, width: "8ch" },
-              }}
-              noValidate
-              autoComplete="off"
-            >
-              <TextField
-                id={item.itemNumber + ".rate-input"}
-                onKeyDown={(event) => handleCheckRateDigit(event, { item })}
-                defaultValue={item.itemRate}
-                onChange={(event) => {
-                  handleEditItemRate(event, { item });
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      {item.itemRatePrefix}
-                    </InputAdornment>
-                  ),
-                }}
-              ></TextField>
-            </Box>
+            {selectedCurrencyType.label === "Hourly rate" ? (
+              <>
+                <Box
+                  component="form"
+                  sx={{
+                    "& .MuiTextField-root": { ml: 1, mt: 2, width: "14ch" },
+                  }}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <TextField
+                    id={item.itemNumber + ".hour-rate-input"}
+                    onKeyDown={(event) => handleCheckRateDigit(event)}
+                    value={item.itemHourRate}
+                    onChange={(event) => {
+                      handleEditItemRate(event, { item });
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          {item.itemHourRatePrefix}
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          {item.itemHourRateSuffix}
+                        </InputAdornment>
+                      ),
+                    }}
+                  ></TextField>
+                </Box>
+                <Box
+                  component="form"
+                  sx={{
+                    "& .MuiTextField-root": { ml: 1, mt: 2, width: "8ch" },
+                  }}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <TextField
+                    id={item.itemNumber + ".hour-input"}
+                    onKeyDown={(event) => handleCheckQuantityDigit(event)}
+                    value={item.itemHour}
+                    onChange={(event) =>
+                      handleEditItemQuantity(event, { item })
+                    }
+                  ></TextField>
+                </Box>
+              </>
+            ) : (
+              <>
+                <Box
+                  component="form"
+                  sx={{
+                    "& .MuiTextField-root": { ml: 1, mt: 2, width: "8ch" },
+                  }}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <TextField
+                    id={item.itemNumber + ".qty-input"}
+                    onKeyDown={(event) => handleCheckQuantityDigit(event)}
+                    value={item.itemQuantity}
+                    onChange={(event) =>
+                      handleEditItemQuantity(event, { item })
+                    }
+                  ></TextField>
+                </Box>
+                <Box
+                  component="form"
+                  sx={{
+                    "& .MuiTextField-root": { ml: 1, mt: 2, width: "14ch" },
+                  }}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <TextField
+                    id={item.itemNumber + ".rate-input"}
+                    onKeyDown={(event) => handleCheckRateDigit(event)}
+                    value={item.itemRate}
+                    onChange={(event) => {
+                      handleEditItemRate(event, { item });
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          {item.itemRatePrefix}
+                        </InputAdornment>
+                      ),
+                    }}
+                  ></TextField>
+                </Box>
+              </>
+            )}
+
             <Box ml={1} mt={3}>
               <IconButton
                 size="small"

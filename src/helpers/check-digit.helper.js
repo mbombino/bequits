@@ -33,6 +33,7 @@ export function checkRateDigit(keyCode, key, selectionStart, value, event) {
 
   if (!isValidNumericKey && !isValidControlKey && !isValidDecimalKey) {
     event.preventDefault();
+    return;
   }
 
   if (
@@ -41,10 +42,12 @@ export function checkRateDigit(keyCode, key, selectionStart, value, event) {
     selectionStart > value.indexOf(".")
   ) {
     event.preventDefault();
+    return;
   }
 
   if (isLeadingZero || isDoubleZero) {
     event.preventDefault();
+    return;
   }
 }
 

@@ -198,9 +198,11 @@ export default function PDFPreview() {
                 {item.itemDescription}
               </Typography>
             </Box>
+
             <Box sx={styles.rateFlex}>
-              <Typography style={styles.textSize}>RATE</Typography>
+              <Typography style={styles.textSize}>RATE/hr</Typography>
             </Box>
+
             <Box sx={styles.rateFlex}>
               <Typography style={styles.textSize}>
                 {item.itemQuantity}
