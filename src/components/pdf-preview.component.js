@@ -27,7 +27,7 @@ import { PDFDownloadLink, StyleSheet } from "@react-pdf/renderer";
 
 import React, { Fragment, useState } from "react";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import InvoiceDownloadSection from "./invoice-download.component";
 
 export default function PDFPreview() {
@@ -51,6 +51,8 @@ export default function PDFPreview() {
   const memo = useSelector((state) => state.invoice.memo);
   const bankingDetails = useSelector((state) => state.invoice.bankingDetails);
 
+  const dispatch = useDispatch();
+  const items = [];
   const invoiceTotal =
     selectedCurrencyType.label === "Hourly rate"
       ? itemsData.reduce(
@@ -61,6 +63,10 @@ export default function PDFPreview() {
           (total, item) => total + item.itemQuantity * item.itemRate,
           0
         );
+
+  items.push(invoiceTotal);
+
+  const invoiceSubtotal = items.reduce((total, item) => total + item, 0);
 
   const invoiceTax = itemsData.reduce(
     (total, item) =>
@@ -229,6 +235,11 @@ export default function PDFPreview() {
                     {item.itemHour}
                   </Typography>
                 </Box>
+                <Box sx={styles.rateFlex}>
+                  <Typography style={styles.textSize}>
+                    R{parseFloat(item.itemHourRateTotal).toFixed(2)}
+                  </Typography>
+                </Box>
               </>
             ) : (
               <>
@@ -242,14 +253,13 @@ export default function PDFPreview() {
                     R{parseFloat(item.itemRate).toFixed(2)}
                   </Typography>
                 </Box>
+                <Box sx={styles.rateFlex}>
+                  <Typography style={styles.textSize}>
+                    R{parseFloat(item.itemRateTotal).toFixed(2)}
+                  </Typography>
+                </Box>
               </>
             )}
-
-            <Box sx={styles.rateFlex}>
-              <Typography style={styles.textSize}>
-                R{parseFloat(invoiceTotal).toFixed(2)}
-              </Typography>
-            </Box>
           </Box>
         </Box>
       </Fragment>
@@ -258,7 +268,9 @@ export default function PDFPreview() {
     <Box sx={styles.totalContainer}>
       <Box sx={styles.totalDirection}>
         <Typography style={styles.totalTextSize}>SUBTOTAL</Typography>
-        <Typography style={styles.totalRate}>R0.00</Typography>
+        <Typography style={styles.totalRate}>
+          R{parseFloat(invoiceSubtotal).toFixed(2)}
+        </Typography>
       </Box>
       <Box>
         <Typography style={styles.textSize}>TAX</Typography>

@@ -48,6 +48,8 @@ export const invoiceSlice = createSlice({
         itemHourRatePrefix: "",
         itemHourRateSuffix: "",
         itemTax: 0,
+        itemHourRateTotal: 0,
+        itemRateTotal: 0,
       },
     ],
     subtotal: 0,

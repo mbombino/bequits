@@ -105,6 +105,8 @@ export default function ItemsSections() {
       itemHourRatePrefix: "",
       itemHourRateSuffix: "",
       itemTax: 0,
+      itemHourRateTotal: 0,
+      itemRateTotal: 0,
     };
 
     dispatch(setAddItemsData(itemToAdd));
@@ -131,6 +133,10 @@ export default function ItemsSections() {
       ...item,
       [id.includes("hour-input") ? "itemHour" : "itemQuantity"]:
         event.target.value,
+      [id.includes("hour-input") ? "itemHourRateTotal" : "itemRateTotal"]:
+        id.includes("hour-input")
+          ? item.itemHourRate * event.target.value
+          : item.itemRate * event.target.value,
     };
     dispatch(setEditItemsData(itemToEdit));
   };
@@ -152,6 +158,9 @@ export default function ItemsSections() {
       [isHourlyRate ? "itemHourRatePrefix" : "itemRatePrefix"]: textFieldPrefix,
       itemHourRateSuffix: textFieldSuffix,
       [isHourlyRate ? "itemHourRate" : "itemRate"]: newRate,
+      [isHourlyRate ? "itemHourRateTotal" : "itemRateTotal"]: isHourlyRate
+        ? item.itemHour * newRate
+        : item.itemQuantity * newRate,
     };
 
     dispatch(setEditItemsData(itemToEdit));
