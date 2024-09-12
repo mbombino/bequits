@@ -144,6 +144,7 @@ export default function PDFPreview() {
               discountType={selectedDiscountType}
               discount={discount}
               tax={invoiceTax}
+              memo={memo}
             />
           }
           fileName="invoice.pdf"

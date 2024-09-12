@@ -26,6 +26,7 @@ export default function InvoiceDownloadSection({
   discountType,
   discount,
   tax,
+  memo,
 }) {
   const InvoiceHeader = () => (
     <View style={styles.headerContainer}>
@@ -198,9 +199,7 @@ export default function InvoiceDownloadSection({
           </View>
         </View>
         <View style={{ marginLeft: "50%" }}>
-          <Text style={[styles.text, { fontWeight: "bold" }]}>
-            Thank you for your business!
-          </Text>
+          <Text style={[styles.text, { fontWeight: "bold" }]}>{memo}</Text>
         </View>
       </View>
     );
