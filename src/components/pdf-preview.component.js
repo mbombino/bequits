@@ -50,10 +50,7 @@ export default function PDFPreview() {
   );
   const memo = useSelector((state) => state.invoice.memo);
   const bankingDetails = useSelector((state) => state.invoice.bankingDetails);
-
-  const dispatch = useDispatch();
-  const items = [];
-  const invoiceTotal =
+  const invoiceSubtotal =
     selectedCurrencyType.label === "Hourly rate"
       ? itemsData.reduce(
           (total, item) => total + item.itemHourRate * item.itemHour,
@@ -64,17 +61,20 @@ export default function PDFPreview() {
           0
         );
 
-  items.push(invoiceTotal);
+  const invoiceTax =
+    selectedCurrencyType.label === "Hourly rate"
+      ? itemsData.reduce(
+          (total, item) =>
+            total + item.itemHourRate * item.itemHour * (item.itemTax / 100),
+          0
+        )
+      : itemsData.reduce(
+          (total, item) =>
+            total + item.itemQuantity * item.itemRate * (item.itemTax / 100),
+          0
+        );
 
-  const invoiceSubtotal = items.reduce((total, item) => total + item, 0);
-
-  const invoiceTax = itemsData.reduce(
-    (total, item) =>
-      total + item.itemQuantity * item.itemRate * (item.itemTax / 100),
-    0
-  );
-
-  //const invoiceTotalDue = invoiceSubtotal + invoiceTax;
+  const invoiceTotal = invoiceSubtotal + invoiceTax;
 
   const invoiceDiscount =
     selectedDiscountType === "percent"
@@ -272,8 +272,11 @@ export default function PDFPreview() {
           R{parseFloat(invoiceSubtotal).toFixed(2)}
         </Typography>
       </Box>
-      <Box>
-        <Typography style={styles.textSize}>TAX</Typography>
+      <Box sx={styles.totalDirection}>
+        <Typography style={styles.totalTextSize}>TAX</Typography>
+        <Typography style={styles.totalRate}>
+          R{parseFloat(invoiceTax).toFixed(2)}
+        </Typography>
       </Box>
       <Box>
         <Typography style={styles.textSize}>TOTAL</Typography>
