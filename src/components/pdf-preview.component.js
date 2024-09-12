@@ -143,7 +143,11 @@ export default function PDFPreview() {
               <IconButton size="small" sx={{ borderRadius: 2 }}>
                 <ChangeCircleOutlined />
               </IconButton>
-              <IconButton size="small" sx={{ borderRadius: 2 }}>
+              <IconButton
+                size="small"
+                sx={{ borderRadius: 2 }}
+                onClick={() => dispatch(setLogoImage(""))}
+              >
                 <DeleteOutline />
               </IconButton>
             </Box>

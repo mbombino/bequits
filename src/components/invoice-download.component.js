@@ -31,8 +31,14 @@ export default function InvoiceDownloadSection({
 }) {
   const InvoiceHeader = () => (
     <View style={styles.headerContainer}>
-      <Image src={logoImage} style={styles.logo} />
-      <Text style={styles.invoiceTypeFontSize}>Company Name & Logo</Text>
+      {logoImage === "" ? (
+        <Text style={styles.invoiceTypeFontSize}>Company Name & Logo</Text>
+      ) : (
+        <>
+          <Image src={logoImage} style={styles.logo} />
+          <Text style={styles.invoiceTypeFontSize}>Company Name</Text>
+        </>
+      )}
     </View>
   );
   const InvoiceHeading = () => (
