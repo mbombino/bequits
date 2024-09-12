@@ -17,12 +17,15 @@ Font.register({
 
 export default function InvoiceDownloadSection({
   logoImage,
-  currencySymbol,
+  currencyType,
   invoiceType,
   invoiceDate,
   invoiceNumber,
   billAddress,
   items,
+  discountType,
+  discount,
+  tax,
 }) {
   const InvoiceHeader = () => (
     <View style={styles.headerContainer}>
@@ -79,43 +82,75 @@ export default function InvoiceDownloadSection({
             <View style={styles.taskDescription}>
               <Text style={styles.text}>{item.itemDescription}</Text>
             </View>
-            <View style={styles.rate}>
-              <Text style={styles.text}>{item.itemQuantity}</Text>
-            </View>
-            <View style={styles.rate}>
-              <Text style={styles.text}>
-                {currencySymbol}
-                {item.itemRate}
-              </Text>
-            </View>
-            <View style={styles.rate}>
-              <Text style={styles.text}>
-                {currencySymbol}
-                {parseFloat(item.itemRate).toFixed(2)}
-              </Text>
-            </View>
+            {currencyType === "Hourly rate" ? (
+              <>
+                <View style={styles.rate}>
+                  <Text style={styles.text}>
+                    R{parseFloat(item.itemHourRate).toFixed(2)}/hr
+                  </Text>
+                </View>
+                <View style={styles.rate}>
+                  <Text style={styles.text}>{item.itemHour}</Text>
+                </View>
+                <View style={styles.rate}>
+                  <Text style={styles.text}>
+                    R{parseFloat(item.itemHourRateTotal).toFixed(2)}
+                  </Text>
+                </View>
+              </>
+            ) : (
+              <>
+                <View style={styles.rate}>
+                  <Text style={styles.text}>{item.itemQuantity}</Text>
+                </View>
+                <View style={styles.rate}>
+                  <Text style={styles.text}>
+                    R{parseFloat(item.itemRate).toFixed(2)}
+                  </Text>
+                </View>
+                <View style={styles.rate}>
+                  <Text style={styles.text}>
+                    R{parseFloat(item.itemRateTotal).toFixed(2)}
+                  </Text>
+                </View>
+              </>
+            )}
           </View>
         </View>
       </Fragment>
     ));
 
   const InvoiceTotals = () => {
-    const invoiceSubtotal = items.reduce(
-      (total, item) => total + item.itemQuantity * item.itemRate,
-      0
-    );
-    const invoiceTax = items.reduce(
-      (total, item) =>
-        total + item.itemQuantity * item.itemRate * (item.itemTax / 100),
-      0
-    );
-    const invoiceTotal = invoiceSubtotal + invoiceTax;
-    /*const invoiceDiscount =
-      selectedDiscountType === "percent"
-        ? invoiceTotal * (discount / 100)
-        : discount;
+    const invoiceSubtotal =
+      currencyType === "Hourly rate"
+        ? items.reduce(
+            (total, item) => total + item.itemHourRate * item.itemHour,
+            0
+          )
+        : items.reduce(
+            (total, item) => total + item.itemQuantity * item.itemRate,
+            0
+          );
 
-    const invoiceBalanceDue = invoiceTotal - invoiceDiscount;*/
+    const invoiceTax =
+      currencyType === "Hourly rate"
+        ? items.reduce(
+            (total, item) =>
+              total + item.itemHourRate * item.itemHour * (item.itemTax / 100),
+            0
+          )
+        : items.reduce(
+            (total, item) =>
+              total + item.itemQuantity * item.itemRate * (item.itemTax / 100),
+            0
+          );
+
+    const invoiceTotal = invoiceSubtotal + invoiceTax;
+
+    const invoiceDiscount =
+      discountType === "percent" ? invoiceTotal * (discount / 100) : discount;
+
+    const invoiceTotalDue = invoiceTotal - invoiceDiscount;
     return (
       <View>
         <View
@@ -133,36 +168,32 @@ export default function InvoiceDownloadSection({
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.total}>SUBTOTAL</Text>
             <Text style={styles.price}>
-              {currencySymbol}
-              {parseFloat(invoiceSubtotal).toFixed(2)}
+              R{parseFloat(invoiceSubtotal).toFixed(2)}
             </Text>
           </View>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
             <Text style={styles.total}>TAX</Text>
             <Text style={styles.price}>
-              {currencySymbol}
-              {parseFloat(invoiceTax).toFixed(2)}
+              R{parseFloat(invoiceTax).toFixed(2)}
             </Text>
           </View>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
             <Text style={styles.total}>TOTAL</Text>
             <Text style={styles.price}>
-              {currencySymbol}
-              {parseFloat(invoiceTotal).toFixed(2)}
+              R{parseFloat(invoiceTotal).toFixed(2)}
             </Text>
           </View>
+
           <View style={{ flexDirection: "row", marginTop: 5 }}>
             <Text style={styles.total}>DISCOUNT</Text>
             <Text style={styles.price}>
-              {currencySymbol}
-              {parseFloat(invoiceTotal).toFixed(2)}
+              R{parseFloat(invoiceDiscount).toFixed(2)}
             </Text>
           </View>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
             <Text style={[styles.totalDue]}>TOTAL DUE</Text>
             <Text style={styles.priceDue}>
-              {currencySymbol}
-              {parseFloat(invoiceTotal).toFixed(2)}
+              R{parseFloat(invoiceTotalDue).toFixed(2)}
             </Text>
           </View>
         </View>

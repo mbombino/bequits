@@ -135,12 +135,15 @@ export default function PDFPreview() {
         <PDFDownloadLink
           document={
             <InvoiceDownloadSection
-              currencySymbol={selectedCurrencyType.symbol}
+              currencyType={selectedCurrencyType.label}
               invoiceType={selectedInvoiceType.label}
               invoiceDate={invoiceDate}
               invoiceNumber={invoiceNumber}
               billAddress={billAddressData}
               items={itemsData}
+              discountType={selectedDiscountType}
+              discount={discount}
+              tax={invoiceTax}
             />
           }
           fileName="invoice.pdf"
@@ -278,14 +281,23 @@ export default function PDFPreview() {
           R{parseFloat(invoiceTax).toFixed(2)}
         </Typography>
       </Box>
-      <Box>
-        <Typography style={styles.textSize}>TOTAL</Typography>
+      <Box sx={styles.totalDirection}>
+        <Typography style={styles.totalTextSize}>TOTAL</Typography>
+        <Typography style={styles.totalRate}>
+          R{parseFloat(invoiceTotal).toFixed(2)}
+        </Typography>
       </Box>
-      <Box>
-        <Typography style={styles.textSize}>DISCOUNT</Typography>
+      <Box sx={styles.totalDirection}>
+        <Typography style={styles.totalTextSize}>DISCOUNT</Typography>
+        <Typography style={styles.totalRate}>
+          R{parseFloat(invoiceDiscount).toFixed(2)}
+        </Typography>
       </Box>
-      <Box>
-        <Typography style={styles.textSize}>TOTAL DUE</Typography>
+      <Box sx={styles.totalDirection}>
+        <Typography style={styles.totalTextSize}>TOTAL DUE</Typography>
+        <Typography style={styles.totalRate}>
+          R{parseFloat(invoiceBalanceDue).toFixed(2)}
+        </Typography>
       </Box>
     </Box>
   );
