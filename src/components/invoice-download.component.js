@@ -6,6 +6,7 @@ import {
   Page,
   StyleSheet,
   Font,
+  Image,
 } from "@react-pdf/renderer";
 
 Font.register({
@@ -30,6 +31,7 @@ export default function InvoiceDownloadSection({
 }) {
   const InvoiceHeader = () => (
     <View style={styles.headerContainer}>
+      <Image src={logoImage} style={styles.logo} />
       <Text style={styles.invoiceTypeFontSize}>Company Name & Logo</Text>
     </View>
   );
@@ -278,6 +280,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
     padding: 30,
+    gap: 5,
     backgroundColor: "#d1c2b8",
   },
   padding: { padding: 50 },
@@ -304,6 +307,7 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     color: "#333",
   },
+  logo: { width: 30, height: 30 },
   subHeaderText: {
     fontSize: 12,
     color: "#333",

@@ -1,5 +1,8 @@
 import {
+  ArrowForward,
+  ChangeCircleOutlined,
   Circle,
+  DeleteOutline,
   Download,
   DownloadOutlined,
   DownloadRounded,
@@ -8,6 +11,7 @@ import {
   FilePresentRounded,
   Height,
   HomeRepairServiceOutlined,
+  Remove,
 } from "@mui/icons-material";
 import {
   Box,
@@ -28,6 +32,7 @@ import { PDFDownloadLink, StyleSheet } from "@react-pdf/renderer";
 import React, { Fragment, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
+import { setLogoImage } from "../store/invoiceSlice";
 import InvoiceDownloadSection from "./invoice-download.component";
 
 export default function PDFPreview() {
@@ -50,6 +55,8 @@ export default function PDFPreview() {
   );
   const memo = useSelector((state) => state.invoice.memo);
   const bankingDetails = useSelector((state) => state.invoice.bankingDetails);
+  const dispatch = useDispatch();
+
   const invoiceSubtotal =
     selectedCurrencyType.label === "Hourly rate"
       ? itemsData.reduce(
@@ -98,10 +105,7 @@ export default function PDFPreview() {
     let currentFile = event.target.files[0];
 
     getBase64(currentFile).then((result) => {
-      //setUploadedFile(result);
-      //setLogoImageSelected(true);
-      //dispatch(setLogoImage(result));
-      console.log(result);
+      dispatch(setLogoImage(result));
     });
   };
   const InvoiceMenuBar = () => (
@@ -113,23 +117,42 @@ export default function PDFPreview() {
       justifyContent={"space-between"}
     >
       <Box display={"flex"} gap={1}>
-        <input
-          id="btn-change"
-          style={{ display: "none" }}
-          type="file"
-          onChange={upload}
-        />
-        <IconButton
-          size="small"
-          sx={{ borderRadius: 2 }}
-          onClick={() => document.getElementById("btn-change").click()}
-        >
-          <FilePresentRounded />
-        </IconButton>
-        <Divider orientation="vertical" flexItem />
-        <IconButton size="small" sx={{ borderRadius: 2 }}>
-          <Circle sx={{ color: "#d1c2b8" }} />
-        </IconButton>
+        {logoImage === "" ? (
+          <>
+            <input
+              id="btn-change"
+              style={{ display: "none" }}
+              type="file"
+              onChange={upload}
+            />
+            <IconButton
+              size="small"
+              sx={{ borderRadius: 2 }}
+              onClick={() => document.getElementById("btn-change").click()}
+            >
+              <FilePresentRounded />
+            </IconButton>
+            <Divider orientation="vertical" flexItem />
+            <IconButton size="small" sx={{ borderRadius: 2 }}>
+              <Circle sx={{ color: "#d1c2b8" }} />
+            </IconButton>
+          </>
+        ) : (
+          <>
+            <Box bgcolor={"#f1f1f1"} borderRadius={2}>
+              <IconButton size="small" sx={{ borderRadius: 2 }}>
+                <ChangeCircleOutlined />
+              </IconButton>
+              <IconButton size="small" sx={{ borderRadius: 2 }}>
+                <DeleteOutline />
+              </IconButton>
+            </Box>
+            <Divider orientation="vertical" flexItem />
+            <IconButton size="small" sx={{ borderRadius: 2 }}>
+              <Circle sx={{ color: "#d1c2b8" }} />
+            </IconButton>
+          </>
+        )}
       </Box>
       <Box>
         <PDFDownloadLink
@@ -145,6 +168,7 @@ export default function PDFPreview() {
               discount={discount}
               tax={invoiceTax}
               memo={memo}
+              logoImage={logoImage}
             />
           }
           fileName="invoice.pdf"
@@ -157,8 +181,21 @@ export default function PDFPreview() {
     </Box>
   );
   const InvoiceHeader = () => (
-    <Box style={styles.headerContainer}>
-      <Typography>Company Name & Logo</Typography>
+    <Box sx={styles.headerContainer}>
+      {logoImage === "" ? (
+        <Box>
+          <Typography>Company Name & Logo</Typography>
+        </Box>
+      ) : (
+        <>
+          <Box>
+            <img src={logoImage} alt="logo" style={{ width: 30, height: 30 }} />
+          </Box>
+          <Box>
+            <Typography>Company Name</Typography>
+          </Box>
+        </>
+      )}
     </Box>
   );
   const InvoiceHeading = () => (
@@ -370,8 +407,9 @@ export default function PDFPreview() {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    flexDirection: "row",
-    padding: 30,
+    display: "flex",
+    padding: 3,
+    gap: 1,
     backgroundColor: "#d1c2b8",
   },
   contentContainer: { paddingLeft: 3, paddingRight: 3, margin: 0.5 },
@@ -413,7 +451,7 @@ const styles = StyleSheet.create({
   textSize: { fontSize: 10 },
   totalTextSize: { fontSize: 10, flex: 2 },
   totalRate: { fontSize: 10, flex: 0.8 },
-  subHeaderText: { fontSize: 11 },
+  subHeaderText: { fontSize: 11, textTransform: "uppercase" },
   taskFlex: { flex: 1.5 },
   rateFlex: { flex: 0.5 },
 });
