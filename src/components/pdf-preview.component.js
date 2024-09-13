@@ -351,9 +351,16 @@ export default function PDFPreview() {
     </Box>
   );
   const InvoicePayment = () => (
-    <Box sx={styles.paymentContainer}>
-      <Typography style={styles.totalTextSize}>PAYMENT INFORMATION</Typography>
-    </Box>
+    <>
+      <Box sx={styles.paymentContainer}>
+        <Typography style={styles.totalTextSize}>
+          PAYMENT INFORMATION
+        </Typography>
+      </Box>
+      <Box>
+        <Typography style={styles.bankingDetails}>{bankingDetails}</Typography>
+      </Box>
+    </>
   );
 
   //will make a gist
@@ -455,6 +462,7 @@ const styles = StyleSheet.create({
   textSize: { fontSize: 10 },
   totalTextSize: { fontSize: 10, flex: 2 },
   totalRate: { fontSize: 10, flex: 0.8 },
+  bankingDetails: { fontSize: 10, whiteSpace: "pre-line", padding: 5 },
   subHeaderText: { fontSize: 11, textTransform: "uppercase" },
   taskFlex: { flex: 1.5 },
   rateFlex: { flex: 0.5 },
