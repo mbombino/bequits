@@ -173,6 +173,7 @@ export default function PDFPreview() {
               tax={invoiceTax}
               memo={memo}
               logoImage={logoImage}
+              bankingDetails={bankingDetails}
             />
           }
           fileName="invoice.pdf"

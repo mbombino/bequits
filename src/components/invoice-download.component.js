@@ -28,6 +28,7 @@ export default function InvoiceDownloadSection({
   discount,
   tax,
   memo,
+  bankingDetails,
 }) {
   const InvoiceHeader = () => (
     <View style={styles.headerContainer}>
@@ -213,9 +214,14 @@ export default function InvoiceDownloadSection({
     );
   };
   const InvoiceMemo = () => (
-    <View style={styles.memoContainer}>
-      <Text style={styles.subHeaderText}>PAYMENT INFORMATION</Text>
-    </View>
+    <>
+      <View style={styles.memoContainer}>
+        <Text style={styles.subHeaderText}>PAYMENT INFORMATION</Text>
+      </View>
+      <View>
+        <Text style={styles.bankingDetails}>{bankingDetails}</Text>
+      </View>
+    </>
   );
   const InvoiceFooter = () => (
     <View
@@ -361,5 +367,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#d1c2b8",
     width: "50%",
     marginTop: 20,
+  },
+  bankingDetails: {
+    fontSize: 10,
+    whiteSpace: "pre-line",
+    //marginLeft: 30,
+    padding: 10,
+    lineHeight: 1.5,
   },
 });
