@@ -239,8 +239,8 @@ export default function InvoiceDownloadSection({
           justifyContent: "space-between",
         }}
       >
-        <Text style={styles.text}>COMPANY NAME</Text>
-        <Text style={styles.text}>CELL NUMBER</Text>
+        <Text style={styles.text}>Company name</Text>
+        <Text style={styles.text}>Cell number</Text>
       </View>
       <View
         style={{
@@ -249,8 +249,8 @@ export default function InvoiceDownloadSection({
           marginTop: 5,
         }}
       >
-        <Text style={styles.text}>COMPANY ADDRESS</Text>
-        <Text style={styles.text}>EMAIL ADDRESS</Text>
+        <Text style={styles.text}>Company address</Text>
+        <Text style={styles.text}>Email address</Text>
       </View>
       <View
         style={{
@@ -259,8 +259,8 @@ export default function InvoiceDownloadSection({
           marginTop: 5,
         }}
       >
-        <Text style={styles.text}>COMPANY CITY</Text>
-        <Text style={styles.text}>WEBSITE</Text>
+        <Text style={styles.text}>Company city</Text>
+        <Text style={styles.text}>Website</Text>
       </View>
     </View>
   );

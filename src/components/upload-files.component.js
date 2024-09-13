@@ -58,9 +58,19 @@ export default function UploadFile() {
       <Typography variant="h5" color={"white"}>
         Templates
       </Typography>
-      <Typography color={"white"} mt={4}>
-        More invoices will be here
-      </Typography>
+
+      <Box mt={4}>
+        {defaultCoverImages &&
+          defaultCoverImages.map((image) => (
+            <Box>
+              <img
+                src={image.url}
+                alt="cover"
+                style={{ width: 200, height: 300 }}
+              />
+            </Box>
+          ))}
+      </Box>
     </Box>
   );
 }
